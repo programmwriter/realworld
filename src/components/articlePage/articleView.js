@@ -1,17 +1,16 @@
 import React from "react";
 import PropTypes, { arrayOf } from "prop-types";
+// import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Typography } from "antd";
 import { HeartTwoTone } from "@ant-design/icons";
-import { DateTime } from "luxon";
 
-import "./article.scss";
+import avatar from "../../img/User-avatar.svg";
+import "./articleView.scss";
 
 const { Paragraph } = Typography;
 
-const Article = ({ article }) => {
-  const dt = DateTime.fromISO(article.createdAt, { locale: "en" });
-
+const ArticleView = ({ article }) => {
   const { tagList } = article;
   const renderTags = tagList.map((tag) => {
     return (
@@ -37,12 +36,12 @@ const Article = ({ article }) => {
         </div>
         <div className="user">
           <div className="user__info">
-            <div className="user__name">{article.author.username}</div>
-            <div className="user__date">
-              {`${dt.monthLong} ${dt.day}, ${dt.year}`}
-            </div>
+            <div className="user__name">John Doe</div>
+            <div className="user__date">March 5, 2020</div>
           </div>
-          <img className="user__ava" src={article.author.image} alt="" />
+          <div className="user__ava">
+            <img src={avatar} alt="" />
+          </div>
         </div>
       </div>
       <div className="article__content">
@@ -54,9 +53,9 @@ const Article = ({ article }) => {
   );
 };
 
-export default Article;
+export default ArticleView;
 
-Article.propTypes = {
+ArticleView.propTypes = {
   article: PropTypes.shape({
     slug: PropTypes.string,
     title: PropTypes.string,

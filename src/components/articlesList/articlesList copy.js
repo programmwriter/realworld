@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Pagination, Spin } from "antd";
-import { setPage, recieveArticles, setLoadingArticles } from "../../actions";
+import { setPage } from "../../actions";
 import Article from "../article";
-import { getArticlesList } from "../../services/api";
 
 import "./articlesList.scss";
 
@@ -11,24 +10,10 @@ const ArticlesList = () => {
   const dispatch = useDispatch();
 
   const isLoading = useSelector((state) => state.loading);
-  const storeArticles = useSelector((state) => state.articles);
+  const articles = useSelector((state) => state.articles);
   const page = useSelector((state) => state.page);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const { articles } = await getArticlesList(5, page);
-
-      dispatch(recieveArticles(articles));
-      dispatch(setLoadingArticles(true));
-    };
-
-    fetchData();
-    return () => {
-      dispatch(setLoadingArticles(false));
-    };
-  }, [page, dispatch]);
-
-  const articlesList = storeArticles.map((article) => {
+  const articlesList = articles.map((article) => {
     return <Article key={article.createdAt} article={article} />;
   });
 
