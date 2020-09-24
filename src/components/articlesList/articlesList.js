@@ -29,7 +29,7 @@ const ArticlesList = () => {
   }, [page, dispatch]);
 
   const articlesList = storeArticles.map((article) => {
-    return <Article key={article.createdAt} article={article} />;
+    return <Article key={article.createdAt} article={article} isList />;
   });
 
   const onChangePage = (changedPage) => {

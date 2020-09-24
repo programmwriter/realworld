@@ -4,15 +4,25 @@ import { Link } from "react-router-dom";
 import { Typography } from "antd";
 import { HeartTwoTone } from "@ant-design/icons";
 import { DateTime } from "luxon";
+import Markdown from "markdown-to-jsx";
 
 import "./article.scss";
 
 const { Paragraph } = Typography;
 
-const Article = ({ article }) => {
+const Article = ({ article, isList }) => {
   const dt = DateTime.fromISO(article.createdAt, { locale: "en" });
 
-  const { tagList } = article;
+  const {
+    tagList,
+    slug,
+    title,
+    favoritesCount,
+    author,
+    description,
+    body,
+  } = article;
+
   const renderTags = tagList.map((tag) => {
     return (
       <span key={tag} className="article__tag">
@@ -26,29 +36,30 @@ const Article = ({ article }) => {
       <div className="article__header">
         <div className="article__left">
           <div className="article__top">
-            <Link to={`articles/${article.slug}`} className="article__title">
-              {article.title}
+            <Link to={`articles/${slug}`} className="article__title">
+              {title}
             </Link>
-            {/* <button type="button"  onClick ={handleClick} className="article__title">{article.title}</button> */}
             <HeartTwoTone className="article__heart" twoToneColor="#eb2f96" />
-            <span className="article__like">{article.favoritesCount}</span>
+            <span className="article__like">{favoritesCount}</span>
           </div>
           <div className="article__tags">{renderTags}</div>
         </div>
         <div className="user">
           <div className="user__info">
-            <div className="user__name">{article.author.username}</div>
+            <div className="user__name">{author.username}</div>
             <div className="user__date">
               {`${dt.monthLong} ${dt.day}, ${dt.year}`}
             </div>
           </div>
-          <img className="user__ava" src={article.author.image} alt="" />
+          <img className="user__ava" src={author.image} alt="" />
         </div>
       </div>
       <div className="article__content">
         <Paragraph ellipsis={{ rows: 2, expandable: true, symbol: "..." }}>
-          {article.body}
+          {description}
         </Paragraph>
+
+        {!isList && <Markdown>{body}</Markdown>}
       </div>
     </div>
   );
@@ -74,4 +85,5 @@ Article.propTypes = {
       following: PropTypes.bool,
     }),
   }).isRequired,
+  isList: PropTypes.bool.isRequired,
 };

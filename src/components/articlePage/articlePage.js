@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Spin } from "antd";
+
 import { recieveArticle, setLoadingArticle } from "../../actions";
 import { getSingleArticle } from "../../services/api";
 import Article from "../article";
@@ -32,7 +33,11 @@ const ArticlePage = () => {
     };
   }, [slug, dispatch]);
 
-  const content = !isLoading ? <Spin /> : <Article article={storeArticle} />;
+  const content = !isLoading ? (
+    <Spin />
+  ) : (
+    <Article article={storeArticle} isList={false} />
+  );
 
   return <div className="article-page">{content}</div>;
 };
