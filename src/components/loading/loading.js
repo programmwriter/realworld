@@ -1,26 +1,14 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
 
-import { Spin, Alert } from "antd";
+import spiner from "../../style/icons/Spinner-1s-200px.svg";
+import cls from "./loading.module.scss";
 
-import "./loading.scss";
-import "antd/dist/antd.css";
-
-const Loading = ({ loading }) => {
+const Loading = () => {
   return (
-    <Spin spinning={!loading}>
-      <Alert message="Tickets loaded!!!" type="info" />
-    </Spin>
+    <div className={cls.spiner}>
+      <img src={spiner} className={cls.spiner__img} alt="loading" />
+    </div>
   );
 };
 
-const mapStateToProps = ({ loading }) => ({
-  loading,
-});
-
-export default connect(mapStateToProps)(Loading);
-
-Loading.propTypes = {
-  loading: PropTypes.bool.isRequired,
-};
+export default Loading;

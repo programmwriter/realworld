@@ -1,16 +1,11 @@
-import { SET_LOADING_ARTICLES, SET_LOADING_ARTICLE } from "../actions";
+import { SET_LOADING } from "../actions";
 
-const initialState = {
-  articles: false,
-  article: false,
-};
+const initialState = true;
 
 const loading = (state = initialState, { type, payload }) => {
   switch (type) {
-    case SET_LOADING_ARTICLES:
-      return { ...state, articles: payload };
-    case SET_LOADING_ARTICLE:
-      return { ...state, article: payload };
+    case SET_LOADING:
+      return payload;
     default:
       return state;
   }

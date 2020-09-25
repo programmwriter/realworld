@@ -2,17 +2,17 @@ import React from "react";
 import PropTypes, { arrayOf } from "prop-types";
 import { useHistory, useLocation } from "react-router-dom";
 import { HeartOutlined } from "@ant-design/icons";
-import { DateTime } from "luxon";
 import Markdown from "markdown-to-jsx";
+import Author from "../author";
 
 import cls from "./article.module.scss";
 
 const Article = ({ article, isList }) => {
-  const dt = DateTime.fromISO(article.createdAt, { locale: "en" });
   const history = useHistory();
   const location = useLocation();
 
   const {
+    createdAt,
     tagList,
     slug,
     title,
@@ -44,9 +44,6 @@ const Article = ({ article, isList }) => {
       <div className={cls.article__header}>
         <div className={cls.article__left}>
           <div className={cls.article__top}>
-            {/* <Link to={`articles/${slug}`} className={cls.article__title}>
-              {title}
-            </Link> */}
             <div
               onClick={handleClick}
               className={cls.article__title}
@@ -64,15 +61,7 @@ const Article = ({ article, isList }) => {
           </div>
           <div className={cls.article__tags}>{renderTags}</div>
         </div>
-        <div className={cls.user}>
-          <div className={cls.user__info}>
-            <div className={cls.user__name}>{author.username}</div>
-            <div className={cls.user__date}>
-              {`${dt.monthLong} ${dt.day}, ${dt.year}`}
-            </div>
-          </div>
-          <img className={cls.user__ava} src={author.image} alt="" />
-        </div>
+        <Author author={author} createdAt={createdAt} />
       </div>
       <div className={cls.article__content}>
         {description}

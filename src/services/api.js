@@ -6,7 +6,7 @@ const request = async (url, options = {}) => {
     const response = await fetch(url, options);
 
     if (!response.ok) {
-      throw Error(`Could not fetch ${url}. Status: ${response.status}`);
+      throw new Error(`Could not fetch ${url}. Status: ${response.status}`);
     }
 
     body = await response.json();

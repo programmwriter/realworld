@@ -1,0 +1,13 @@
+// @import "../../styles/sizes.scss";
+.spiner {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  &__img {
+    position: relative;
+    margin: 50px auto;
+    height: 200px;
+    width: 200px;
+  }
+}

@@ -1,0 +1,24 @@
+.author {
+  display: flex;
+  justify-content: space-between;
+
+  &__ava {
+    height: 46px;
+    width: 46px;
+  }
+
+  &__info {
+    margin-right: 12px;
+  }
+
+  &__name {
+    font-size: 18px;
+    line-height: 28px;
+    color: rgba(0, 0, 0, 0.85);
+  }
+  &__date {
+    font-size: 12px;
+    line-height: 22px;
+    color: rgba(0, 0, 0, 0.5);
+  }
+}

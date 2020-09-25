@@ -16,7 +16,7 @@ const Header = () => {
   return (
     <div className={cls.header}>
       <div className={cls.header__title}>
-        <Link to="/">Realworld Blog</Link>
+        <Link to="/articles">Realworld Blog</Link>
       </div>
       <div className={cls.header__autorize}>
         <button type="button" className={btnSign}>
