@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes, { arrayOf } from "prop-types";
 import { Link } from "react-router-dom";
 import { Typography } from "antd";
-import { HeartTwoTone } from "@ant-design/icons";
+import { HeartOutlined } from "@ant-design/icons";
 import { DateTime } from "luxon";
 import Markdown from "markdown-to-jsx";
 
@@ -39,7 +39,10 @@ const Article = ({ article, isList }) => {
             <Link to={`articles/${slug}`} className="article__title">
               {title}
             </Link>
-            <HeartTwoTone className="article__heart" twoToneColor="#eb2f96" />
+            <HeartOutlined
+              className="article__heart"
+              style={{ fontSize: "16px" }}
+            />
             <span className="article__like">{favoritesCount}</span>
           </div>
           <div className="article__tags">{renderTags}</div>
