@@ -5,7 +5,8 @@ import { setPage, recieveArticles, setLoadingArticles } from "../../actions";
 import Article from "../article";
 import { getArticlesList } from "../../services/api";
 
-import "./articlesList.scss";
+import cls from "./articlesList.module.scss";
+import "./antPagination.scss";
 
 const ArticlesList = () => {
   const dispatch = useDispatch();
@@ -36,9 +37,9 @@ const ArticlesList = () => {
     dispatch(setPage(changedPage));
   };
   return (
-    <div className="articles-list">
+    <div className={cls.articles_list}>
       {!isLoading ? <Spin /> : articlesList}
-      <div className="pagination">
+      <div className={cls.pagination}>
         <Pagination
           current={page}
           onChange={onChangePage}

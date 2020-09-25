@@ -5,23 +5,17 @@ import Header from "../header";
 import ArticlesList from "../articlesList";
 import ArticlePage from "../articlePage";
 
-import "./app.scss";
+import cls from "./app.module.scss";
 import "antd/dist/antd.css";
 
 function App() {
   return (
     <Router>
-      <div className="app">
+      <div className={cls.app}>
         <Header />
         <Route path="/" component={ArticlesList} exact />
         <Route path="/articles" component={ArticlesList} exact />
-        <Route
-          path="/articles/:slug"
-          render={({ match }) => {
-            const { slug } = match.params;
-            return <ArticlePage slug={slug} />;
-          }}
-        />
+        <Route path="/articles/:slug" component={ArticlePage} exact />
       </div>
     </Router>
   );

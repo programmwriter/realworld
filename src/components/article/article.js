@@ -1,17 +1,16 @@
 import React from "react";
 import PropTypes, { arrayOf } from "prop-types";
-import { Link } from "react-router-dom";
-import { Typography } from "antd";
+import { useHistory, useLocation } from "react-router-dom";
 import { HeartOutlined } from "@ant-design/icons";
 import { DateTime } from "luxon";
 import Markdown from "markdown-to-jsx";
 
-import "./article.scss";
-
-const { Paragraph } = Typography;
+import cls from "./article.module.scss";
 
 const Article = ({ article, isList }) => {
   const dt = DateTime.fromISO(article.createdAt, { locale: "en" });
+  const history = useHistory();
+  const location = useLocation();
 
   const {
     tagList,
@@ -23,45 +22,60 @@ const Article = ({ article, isList }) => {
     body,
   } = article;
 
+  const handleClick = () => {
+    const pushPath = `/articles/${slug}`;
+    const { pathname } = location;
+    if (pushPath === pathname) {
+      return;
+    }
+    history.push(pushPath);
+  };
+
   const renderTags = tagList.map((tag) => {
     return (
-      <span key={tag} className="article__tag">
+      <span key={tag} className={cls.article__tag}>
         {tag}
       </span>
     );
   });
 
   return (
-    <div className="article">
-      <div className="article__header">
-        <div className="article__left">
-          <div className="article__top">
-            <Link to={`articles/${slug}`} className="article__title">
+    <div className={cls.article}>
+      <div className={cls.article__header}>
+        <div className={cls.article__left}>
+          <div className={cls.article__top}>
+            {/* <Link to={`articles/${slug}`} className={cls.article__title}>
               {title}
-            </Link>
+            </Link> */}
+            <div
+              onClick={handleClick}
+              className={cls.article__title}
+              role="button"
+              tabIndex="0"
+              aria-hidden="true"
+            >
+              {title}
+            </div>
             <HeartOutlined
-              className="article__heart"
+              className={cls.article__heart}
               style={{ fontSize: "16px" }}
             />
-            <span className="article__like">{favoritesCount}</span>
+            <span className={cls.article__like}>{favoritesCount}</span>
           </div>
-          <div className="article__tags">{renderTags}</div>
+          <div className={cls.article__tags}>{renderTags}</div>
         </div>
-        <div className="user">
-          <div className="user__info">
-            <div className="user__name">{author.username}</div>
-            <div className="user__date">
+        <div className={cls.user}>
+          <div className={cls.user__info}>
+            <div className={cls.user__name}>{author.username}</div>
+            <div className={cls.user__date}>
               {`${dt.monthLong} ${dt.day}, ${dt.year}`}
             </div>
           </div>
-          <img className="user__ava" src={author.image} alt="" />
+          <img className={cls.user__ava} src={author.image} alt="" />
         </div>
       </div>
-      <div className="article__content">
-        <Paragraph ellipsis={{ rows: 2, expandable: true, symbol: "..." }}>
-          {description}
-        </Paragraph>
-
+      <div className={cls.article__content}>
+        {description}
         {!isList && <Markdown>{body}</Markdown>}
       </div>
     </div>

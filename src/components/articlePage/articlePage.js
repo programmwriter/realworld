@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { Spin } from "antd";
+// import { Spin } from "antd";
 
 import { recieveArticle, setLoadingArticle } from "../../actions";
 import { getSingleArticle } from "../../services/api";
 import Article from "../article";
-import "./articlePage.scss";
+import cls from "./articlePage.module.scss";
+import loadIcon from "../../style/icons/Spinner-1s-200px.svg";
 
 const ArticlePage = () => {
   const { slug } = useParams();
@@ -34,12 +35,13 @@ const ArticlePage = () => {
   }, [slug, dispatch]);
 
   const content = !isLoading ? (
-    <Spin />
+    // <Spin />
+    <img src={loadIcon} alt="loadIcon" />
   ) : (
     <Article article={storeArticle} isList={false} />
   );
 
-  return <div className="article-page">{content}</div>;
+  return <div className={cls.article_page}>{content}</div>;
 };
 
 export default ArticlePage;
