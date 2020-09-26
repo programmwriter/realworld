@@ -1,7 +1,12 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Pagination } from "antd";
-import { setPage, recieveArticles, setLoading, setError } from "../../actions";
+import {
+  setPage,
+  recieveArticles,
+  setLoadingArticles,
+  setError,
+} from "../../actions";
 import Article from "../article";
 import Loading from "../loading";
 import Error from "../error";
@@ -14,27 +19,26 @@ const ArticlesList = () => {
   const dispatch = useDispatch();
 
   const isError = useSelector((state) => state.error);
-  const isLoading = useSelector((state) => state.loading);
+  const isLoading = useSelector((state) => state.loading.articles);
   const storeArticles = useSelector((state) => state.articles);
   const page = useSelector((state) => state.page);
 
   useEffect(() => {
     const fetchData = async () => {
-      dispatch(setLoading(true));
       try {
         const { articles } = await getArticlesList(5, page);
 
         dispatch(recieveArticles(articles));
-        dispatch(setLoading(false));
+        dispatch(setLoadingArticles(false));
       } catch (error) {
         dispatch(setError(true));
-        dispatch(setLoading(false));
+        dispatch(setLoadingArticles(false));
       }
     };
 
     fetchData();
     return () => {
-      dispatch(setLoading(true));
+      dispatch(setLoadingArticles(true));
     };
   }, [page, dispatch]);
 

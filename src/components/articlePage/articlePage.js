@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 
-import { recieveArticle, setLoading, setError } from "../../actions";
+import { recieveArticle, setLoadingArticle, setError } from "../../actions";
 import { getSingleArticle } from "../../services/api";
 import Article from "../article";
 import cls from "./articlePage.module.scss";
@@ -15,40 +15,47 @@ const ArticlePage = () => {
   const dispatch = useDispatch();
 
   const isError = useSelector((state) => state.error);
-  const isLoading = useSelector((state) => state.loading);
+  const isLoading = useSelector((state) => state.loading.article);
   const storeArticle = useSelector((state) => state.article);
 
   useEffect(() => {
     const fetchData = async () => {
-      dispatch(setLoading(true));
       try {
         const { article } = await getSingleArticle(slug);
 
         dispatch(recieveArticle(article));
-        dispatch(setLoading(false));
+        dispatch(setLoadingArticle(false));
       } catch (error) {
         dispatch(setError(true));
-        dispatch(setLoading(false));
+        dispatch(setLoadingArticle(false));
       }
     };
 
     fetchData();
     return () => {
-      dispatch(setLoading(true));
+      dispatch(setLoadingArticle(true));
     };
   }, [slug, dispatch]);
 
   if (isError) {
     return <Error />;
   }
+  if (isLoading) {
+    return <Loading />;
+  }
 
-  const content = isLoading ? (
-    <Loading />
-  ) : (
-    <Article article={storeArticle} isList={false} />
+  // const content = isLoading ? (
+  //   <Loading />
+  // ) : (
+  //   <Article article={storeArticle} isList={false} />
+  // );
+
+  return (
+    <div className={cls.article_page}>
+      <Article article={storeArticle} isList={false} />
+    </div>
   );
-
-  return <div className={cls.article_page}>{content}</div>;
+  // return <div className={cls.article_page}>{content}</div>;
 };
 
 export default ArticlePage;
