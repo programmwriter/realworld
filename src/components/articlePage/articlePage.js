@@ -44,18 +44,11 @@ const ArticlePage = () => {
     return <Loading />;
   }
 
-  // const content = isLoading ? (
-  //   <Loading />
-  // ) : (
-  //   <Article article={storeArticle} isList={false} />
-  // );
-
   return (
     <div className={cls.article_page}>
       <Article article={storeArticle} isList={false} />
     </div>
   );
-  // return <div className={cls.article_page}>{content}</div>;
 };
 
 export default ArticlePage;
