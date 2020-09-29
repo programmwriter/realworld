@@ -13,7 +13,13 @@ const FormInput = React.forwardRef((props, ref) => {
       <label className={cls.label} htmlFor="">
         {label}
       </label>
-      <input className={cls.input} type="text" name={name} ref={ref} />
+      <input
+        className={cls.input}
+        placeholder={name}
+        type="text"
+        name={name}
+        ref={ref}
+      />
     </div>
   );
 });
