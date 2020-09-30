@@ -19,12 +19,12 @@ const Header = () => {
         <Link to="/articles">Realworld Blog</Link>
       </div>
       <div className={cls.header__autorize}>
-        <button type="button" className={btnSign}>
+        <Link to="/sign-in" type="button" className={btnSign}>
           Sign In
-        </button>
-        <button type="button" className={btnSignActive}>
+        </Link>
+        <Link to="/sign-up" type="button" className={btnSignActive}>
           Sign Up
-        </button>
+        </Link>
       </div>
     </div>
   );
