@@ -20,15 +20,18 @@ const SignUp = () => {
         <FormInput
           label="Username"
           name="username"
+          type="text"
           errors={errors}
           ref={register({
             required: { value: true, message: "this field is required" },
             minLength: { value: 3, message: "too short" },
+            maxLength: { value: 20, message: "too long" },
           })}
         />
         <FormInput
           label="Email address"
           name="email"
+          type="email"
           errors={errors}
           ref={register({
             required: { value: true, message: "this field is required" },
@@ -38,28 +41,37 @@ const SignUp = () => {
         <FormInput
           label="Password"
           name="password"
+          type="password"
           errors={errors}
           ref={register({
             required: { value: true, message: "this field is required" },
-            minLength: { value: 3, message: "too short" },
+            minLength: { value: 6, message: "too short" },
+            maxLength: { value: 40, message: "too long" },
           })}
         />
         <FormInput
           label="Repeat Password "
-          name="repeatPassword "
+          name="repeatPassword"
+          type="password"
           errors={errors}
           ref={register({
             required: { value: true, message: "this field is required" },
             minLength: { value: 3, message: "too short" },
           })}
         />
-
         <Divider />
-
         <div className={form.agreement}>
           <label className={form.checkbox_box}>
             I agree to the processing of my personal information
-            <input className={form.checkbox} type="checkbox" name="" id="" />
+            <input
+              className={form.checkbox}
+              type="checkbox"
+              name="agree"
+              ref={register({
+                required: { value: true, message: "this field is required" },
+              })}
+              defaultChecked
+            />
             <span className={form.checkmark} />
           </label>
         </div>

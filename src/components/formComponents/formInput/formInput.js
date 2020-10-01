@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import cls from "./formInput.module.scss";
 
 const FormInput = React.forwardRef((props, ref) => {
-  const { label, name, errors } = props;
+  const { label, name, errors, type } = props;
 
   return (
     <div className={cls.formInput}>
@@ -16,7 +16,7 @@ const FormInput = React.forwardRef((props, ref) => {
       <input
         className={cls.input}
         placeholder={label}
-        type="text"
+        type={type}
         name={name}
         ref={ref}
       />
@@ -30,6 +30,7 @@ export default FormInput;
 
 FormInput.propTypes = {
   label: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   errors: PropTypes.objectOf(PropTypes.string).isRequired,
 };
