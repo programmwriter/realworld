@@ -18,6 +18,7 @@ const FormInput = React.forwardRef((props, ref) => {
         placeholder={label}
         type={type}
         name={name}
+        autoComplete="on"
         ref={ref}
       />
       {errors[name] && (

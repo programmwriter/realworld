@@ -22,7 +22,7 @@
   color: #262626;
   font-family: robotobold;
 }
-input[type="text"] {
+input{
   border: none;
   background: none;
   outline: none;
@@ -42,6 +42,11 @@ button {
   width: 100%;
   background: #1890ff;
   border-radius: 4px;
+  margin-bottom: 8px;
+
+  &:hover{
+    background: darken(#1890ff, 10%);
+  }
 }
 
 .checkbox_box {
@@ -101,4 +106,17 @@ button {
   position: relative;
   height: 45px;
   margin-bottom: 20px;
+
+  &:hover .checkbox_box{    
+    color: darken(#595959, 20%);
+  }
+}
+.accExist {
+  color: #8C8C8C;
+  font-size: 12px;
+  line-height: 20px;
+  text-align: center;
+  &__link:hover{
+    text-decoration: underline;
+  }
 }

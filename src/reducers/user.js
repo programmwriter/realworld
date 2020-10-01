@@ -15,7 +15,7 @@ const initState = {
 const user = (state = initState, { type, payload }) => {
   switch (type) {
     case REGISTER_USER:
-      return { ...state, payload };
+      return payload;
     case AUTHENTICATE_USER:
       return { ...state, payload };
     case UPDATE_USER:
