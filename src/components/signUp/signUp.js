@@ -12,6 +12,7 @@ import "antd/dist/antd.css";
 const SignUp = () => {
   const { register, watch, handleSubmit, errors } = useForm();
   const [error, setError] = useState();
+  const passwordVal = watch("password", "");
   const dispatch = useDispatch();
   const history = useHistory();
   const onSubmit = async (data) => {
@@ -23,15 +24,21 @@ const SignUp = () => {
       setError(err);
     }
   };
-  const passwordVal = watch("password", "");
+
   if (error) {
     return (
       <Result
         status="warning"
         title={`There are some problems with your operation.${error}`}
         extra={
-          <Button type="primary" key="console">
-            Go Console
+          <Button
+            onClick={() => {
+              history.go(0);
+            }}
+            type="primary"
+            key="console"
+          >
+            Try again
           </Button>
         }
       />
@@ -73,7 +80,7 @@ const SignUp = () => {
           errors={errors}
           ref={register({
             required: { value: true, message: "this field is required" },
-            minLength: { value: 6, message: "too short" },
+            minLength: { value: 8, message: "too short" },
             maxLength: { value: 40, message: "too long" },
           })}
         />

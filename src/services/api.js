@@ -4,6 +4,7 @@ const request = async (url, options = {}) => {
   let body;
   try {
     const response = await fetch(url, options);
+    console.log("request -> response", response);
 
     if (!response.ok) {
       throw new Error(`Could not fetch ${url}. Status: ${response.status}`);
@@ -17,6 +18,7 @@ const request = async (url, options = {}) => {
 
   return body;
 };
+
 export const regUser = async (userData) => {
   if (!userData) {
     throw new Error("Missing user data");
@@ -34,11 +36,12 @@ export const regUser = async (userData) => {
   const regOptions = {
     method: "POST",
     headers: {
-      "Content-Type": "application/json;charset=utf-8",
+      "Content-Type": `application/json;charset=utf-8`,
     },
     body: JSON.stringify(regUserData),
   };
   const regData = await request(`${baseUrl}users`, regOptions);
+  console.log("regUser -> regData", regData);
 
   return regData;
 };
