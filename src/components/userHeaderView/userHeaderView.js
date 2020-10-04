@@ -21,7 +21,7 @@ const UserHeaderView = () => {
   const user = useSelector((state) => state.user);
   return (
     <div className={cls.userHeaderView}>
-      <Link to="/create" className={cls.createArticle}>
+      <Link to="/new-article" className={cls.createArticle}>
         Create article
       </Link>
       <Link to="/profile">

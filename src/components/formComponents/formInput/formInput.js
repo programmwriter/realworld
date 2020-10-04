@@ -33,7 +33,10 @@ export default FormInput;
 FormInput.propTypes = {
   label: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
   name: PropTypes.string.isRequired,
   errors: PropTypes.objectOf(PropTypes.objectOf(PropTypes.string)).isRequired,
+};
+FormInput.defaultProps = {
+  value: "",
 };

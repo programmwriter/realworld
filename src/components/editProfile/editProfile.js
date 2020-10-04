@@ -8,7 +8,6 @@ import { updateUser, isUsernameFree } from "../../services/api";
 import { updateUserProfile, setLogedIn } from "../../actions";
 
 import "antd/dist/antd.css";
-// import cls from "./editProfile.module.scss";
 import form from "../formComponents/form.module.scss";
 
 // const myRE = new RegExp(
@@ -43,6 +42,7 @@ const EditProfile = () => {
     if (!isLogedIn) {
       history.push("/sign-in");
     }
+    // eslint-disable-next-line
   }, [isLogedIn]);
 
   const onSubmit = async (data) => {
