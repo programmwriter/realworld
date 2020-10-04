@@ -6,11 +6,13 @@ import {
   recieveArticles,
   setLoadingArticles,
   setError,
+  authenticateUser,
+  setLogedIn,
 } from "../../actions";
 import Article from "../article";
 import Loading from "../loading";
 import Error from "../error";
-import { getArticlesList } from "../../services/api";
+import { getArticlesList, authUser } from "../../services/api";
 
 import cls from "./articlesList.module.scss";
 import "./antPagination.scss";
@@ -26,6 +28,16 @@ const ArticlesList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const email = localStorage.getItem("email");
+        const password = localStorage.getItem("password");
+        if (email) {
+          const response = await authUser({ email, password });
+          if (response.user) {
+            dispatch(authenticateUser(response.user));
+            dispatch(setLogedIn(true));
+          }
+        }
+
         const { articles } = await getArticlesList(5, page);
 
         dispatch(recieveArticles(articles));

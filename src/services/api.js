@@ -4,10 +4,10 @@ const request = async (url, options = {}) => {
   let body;
   try {
     const response = await fetch(url, options);
-    console.log("request -> response", response);
 
     if (!response.ok) {
-      throw new Error(`Could not fetch ${url}. Status: ${response.status}`);
+      body = await response.json();
+      return body;
     }
 
     body = await response.json();
@@ -17,6 +17,14 @@ const request = async (url, options = {}) => {
   }
 
   return body;
+};
+
+export const isUsernameFree = async (username) => {
+  const response = await request(`${baseUrl}profiles/${username}`);
+  if (response.profile) {
+    return false;
+  }
+  return true;
 };
 
 export const regUser = async (userData) => {
@@ -41,11 +49,10 @@ export const regUser = async (userData) => {
     body: JSON.stringify(regUserData),
   };
   const regData = await request(`${baseUrl}users`, regOptions);
-  console.log("regUser -> regData", regData);
 
   return regData;
 };
-export const authUser = async (userData, jwtToken) => {
+export const authUser = async (userData) => {
   if (!userData) {
     throw new Error("Missing user data");
   }
@@ -61,7 +68,7 @@ export const authUser = async (userData, jwtToken) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json;charset=utf-8",
-      Authorization: `Token ${jwtToken}`,
+      // Authorization: `Token ${jwtToken}`,
     },
     body: JSON.stringify(regUserData),
   };
@@ -74,12 +81,13 @@ export const updateUser = async (userData, jwtToken) => {
     throw new Error("Missing user data");
   }
 
-  const { email, bio, image } = userData;
+  const { email, password, image, username } = userData;
   const regUserData = {
     user: {
       email,
-      bio,
+      password,
       image,
+      username,
     },
   };
   const regOptions = {

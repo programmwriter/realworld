@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import cls from "./formInput.module.scss";
 
 const FormInput = React.forwardRef((props, ref) => {
-  const { label, name, errors, type } = props;
+  const { label, name, errors, type, value } = props;
 
   return (
     <div className={cls.formInput}>
@@ -18,6 +18,7 @@ const FormInput = React.forwardRef((props, ref) => {
         placeholder={label}
         type={type}
         name={name}
+        value={value || null}
         autoComplete="on"
         ref={ref}
       />
@@ -32,6 +33,7 @@ export default FormInput;
 FormInput.propTypes = {
   label: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  errors: PropTypes.objectOf(PropTypes.string).isRequired,
+  errors: PropTypes.objectOf(PropTypes.objectOf(PropTypes.string)).isRequired,
 };

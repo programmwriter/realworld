@@ -1,0 +1,28 @@
+.userHeaderView {
+  display: flex;
+  align-items: center;
+}
+.createArticle {
+  height: 31.1px;
+  font-size: 14px;
+  line-height: 22px;
+  color: #52c41a;
+  border: 1px solid #52c41a;
+  box-sizing: border-box;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  margin-right: 25px;
+  padding: 0 10px;
+}
+.logOut {
+  height: 51px;
+  margin: 0 25px;
+  border: 1px solid rgba(0, 0, 0, 0.75);
+  box-sizing: border-box;
+  border-radius: 5px;
+  color: rgba(0, 0, 0, 0.75);
+  font-size: 18px;
+  line-height: 28px;
+  padding: 0 18px;
+}

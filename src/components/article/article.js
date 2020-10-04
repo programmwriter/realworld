@@ -3,7 +3,7 @@ import PropTypes, { arrayOf } from "prop-types";
 import { useHistory, useLocation } from "react-router-dom";
 import { HeartOutlined } from "@ant-design/icons";
 import Markdown from "markdown-to-jsx";
-import Author from "../author";
+import UserView from "../userView";
 
 import cls from "./article.module.scss";
 
@@ -61,7 +61,7 @@ const Article = ({ article, isList }) => {
           </div>
           <div className={cls.article__tags}>{renderTags}</div>
         </div>
-        <Author author={author} createdAt={createdAt} />
+        <UserView author={author} createdAt={createdAt} date />
       </div>
       <div className={cls.article__content}>
         {description}

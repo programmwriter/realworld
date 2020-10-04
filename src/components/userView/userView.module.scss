@@ -1,4 +1,4 @@
-.author {
+.userView {
   display: flex;
   justify-content: space-between;
 
@@ -9,6 +9,9 @@
 
   &__info {
     margin-right: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   &__name {

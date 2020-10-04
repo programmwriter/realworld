@@ -1,25 +1,53 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { Divider, Modal } from "antd";
+import { Modal } from "antd";
 import { Link, useHistory } from "react-router-dom";
 import FormInput from "../formComponents/formInput";
-import form from "../formComponents/form.module.scss";
-import { regUser, isUsernameFree } from "../../services/api";
-import { registerUser, setLogedIn } from "../../actions";
-import "antd/dist/antd.css";
+import { updateUser, isUsernameFree } from "../../services/api";
+import { updateUserProfile, setLogedIn } from "../../actions";
 
-const SignUp = () => {
-  const { register, watch, handleSubmit, errors } = useForm();
+import "antd/dist/antd.css";
+// import cls from "./editProfile.module.scss";
+import form from "../formComponents/form.module.scss";
+
+// const myRE = new RegExp(
+//   [
+//     '^(([^<>()[\\]\\.,;:\\s@\\"]+(\\.[^<>(),[\\]\\.,;:\\s@\\"]+)*)',
+//     '|(\\".+\\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.',
+//     "[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+",
+//     "[a-zA-Z]{2,}))$",
+//   ].join("")
+// );
+
+const EditProfile = () => {
+  const { register, handleSubmit, errors } = useForm();
+
   const [error, setErrors] = useState();
   const [visible, setVisible] = useState(false);
-  const passwordVal = watch("password", "");
+
+  const isLogedIn = useSelector((state) => state.logedIn);
+  const userFromStore = useSelector((state) => state.user);
+  const {
+    token,
+    username: usernameFromStore,
+    email: emailFromStore,
+    image: imageFromStore,
+  } = userFromStore;
+  const passwordFromLS = localStorage.getItem("password");
+
   const dispatch = useDispatch();
   const history = useHistory();
 
+  useEffect(() => {
+    if (!isLogedIn) {
+      history.push("/sign-in");
+    }
+  }, [isLogedIn]);
+
   const onSubmit = async (data) => {
     try {
-      const response = await regUser(data);
+      const response = await updateUser(data, token);
 
       if (response.errors) {
         setErrors(response.errors);
@@ -27,11 +55,11 @@ const SignUp = () => {
       }
 
       if (response.user) {
-        dispatch(registerUser(response.user));
+        dispatch(updateUserProfile(response.user));
         dispatch(setLogedIn(true));
-        const { username, password } = response.user;
-        localStorage.setItem("username", username);
-        localStorage.setItem("password", password);
+        const { email } = response.user;
+        localStorage.setItem("email", email);
+        localStorage.setItem("password", data.password);
         history.push("/articles");
       }
     } catch (err) {
@@ -65,11 +93,13 @@ const SignUp = () => {
   }
   return (
     <div className={form.container}>
-      <h1 className={form.title}>Create new account</h1>
+      <h1 className={form.title}>Edit Profile</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormInput
+          key={1}
           label="Username"
           name="username"
+          value={usernameFromStore}
           type="text"
           errors={errors}
           ref={register({
@@ -78,6 +108,9 @@ const SignUp = () => {
             maxLength: { value: 20, message: "too long" },
             validate: {
               checkUsername: async (value) => {
+                if (value === usernameFromStore) {
+                  return true;
+                }
                 return (
                   (await isUsernameFree(value)) || "this username is not free"
                 );
@@ -86,9 +119,11 @@ const SignUp = () => {
           })}
         />
         <FormInput
+          key={2}
           label="Email address"
           name="email"
           type="text"
+          value={emailFromStore}
           errors={errors}
           ref={register({
             required: { value: true, message: "this field is required" },
@@ -100,9 +135,11 @@ const SignUp = () => {
           })}
         />
         <FormInput
-          label="Password"
+          key={3}
+          label="New password"
           name="password"
           type="password"
+          value={passwordFromLS}
           errors={errors}
           ref={register({
             required: { value: true, message: "this field is required" },
@@ -111,52 +148,33 @@ const SignUp = () => {
           })}
         />
         <FormInput
-          label="Repeat Password "
-          name="repeatPassword"
-          type="password"
+          key={4}
+          label="Avatar image (url)"
+          name="image"
+          type="text"
+          value={imageFromStore}
           errors={errors}
           ref={register({
-            message: "passwords not match",
             required: { value: true, message: "this field is required" },
             minLength: { value: 8, message: "too short" },
-            validate: {
-              checkWithPass: (val) => {
-                return val === `${passwordVal}` || "passwords not match";
-              },
-            },
+            // pattern: {
+            //   value: new RegExp(myRE),
+            //   message: "url is notvalid",
+            // },
           })}
         />
-        <Divider style={{ marginTop: "20px", marginBottom: "8px" }} />
-        <div className={form.agreement}>
-          <label className={form.checkbox_box}>
-            I agree to the processing of my personal information
-            <input
-              className={form.checkbox}
-              type="checkbox"
-              name="agree"
-              ref={register({
-                required: { value: true, message: "this field is required" },
-              })}
-              defaultChecked
-            />
-            <span className={form.checkmark} />
-            {errors.agree && (
-              <p style={{ color: "tomato" }}>{`${errors.agree.message}`}</p>
-            )}
-          </label>
-        </div>
 
         <button className={form.button} type="submit">
-          Create
+          Save
         </button>
         <p className={form.accExist}>
-          Already have an account?&nbsp;
-          <Link className={form.accExist__link} to="/sign-in">
-            Sign In
+          Don’t have an account?&nbsp;
+          <Link className={form.accExist__link} to="/sign-up">
+            Sign Up.
           </Link>
         </p>
       </form>
     </div>
   );
 };
-export default SignUp;
+export default EditProfile;
