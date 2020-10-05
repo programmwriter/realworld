@@ -6,6 +6,7 @@ import { Modal } from "antd";
 import { useHistory } from "react-router-dom";
 // import { Link, useHistory } from "react-router-dom";
 import FormInput from "../formComponents/formInput";
+import Tag from "./tag";
 import { updateUser } from "../../services/api";
 import { updateUserProfile, setLogedIn } from "../../actions";
 
@@ -19,6 +20,7 @@ const NewArticle = () => {
 
   const [error, setErrors] = useState();
   const [visible, setVisible] = useState(false);
+  const [tagsCount, setTagsCount] = useState(1);
 
   // const isLogedIn = useSelector((state) => state.logedIn);
   const token = useSelector((state) => state.user.token);
@@ -78,6 +80,42 @@ const NewArticle = () => {
       </Modal>
     );
   }
+  const deleteTagHandler = () => {
+    setTagsCount((prevCount) => {
+      if (prevCount === 1) {
+        return prevCount;
+      }
+      return prevCount - 1;
+    });
+  };
+  const addTagHandler = () => {
+    setTagsCount((prevCount) => {
+      return prevCount + 1;
+    });
+  };
+
+  const tagsInputs = [];
+  let last = false;
+
+  for (let i = 1; i <= tagsCount; i++) {
+    if (i === tagsCount) last = true;
+    tagsInputs.push(
+      <Tag
+        key={i}
+        name={`tag${i}`}
+        placeholder="Tag"
+        errors={errors}
+        last={last}
+        onDelete={deleteTagHandler}
+        onAdd={addTagHandler}
+        ref={register({
+          required: { value: true, message: "this field is required" },
+          minLength: { value: 3, message: "too short" },
+        })}
+      />
+    );
+  }
+
   return (
     <div className={form.article__container}>
       <h1 className={form.title}>Create new article</h1>
@@ -135,55 +173,7 @@ const NewArticle = () => {
         </div>
         <div className={form.tags}>
           <div className={form.tags__label}>Tags</div>
-          <div className={form.tags__item}>
-            <div className={form.tags__input_box}>
-              <input
-                className={form.tags__input}
-                key={2}
-                name="description"
-                placeholder="Tag"
-                type="text"
-                errors={errors}
-                ref={register({
-                  required: { value: true, message: "this field is required" },
-                  minLength: { value: 6, message: "too short" },
-                  pattern: {
-                    value: /\S+@\S+\.\S+/,
-                    message: "email is notvalid",
-                  },
-                })}
-              />
-            </div>
-            <button className={form.tags__delete} type="button">
-              Delete
-            </button>
-          </div>
-          <div className={form.tags__item}>
-            <div className={form.tags__input_box}>
-              <input
-                className={form.tags__input}
-                key={2}
-                name="description"
-                placeholder="Tag"
-                type="text"
-                errors={errors}
-                ref={register({
-                  required: { value: true, message: "this field is required" },
-                  minLength: { value: 6, message: "too short" },
-                  pattern: {
-                    value: /\S+@\S+\.\S+/,
-                    message: "email is notvalid",
-                  },
-                })}
-              />
-            </div>
-            <button className={form.tags__delete} type="button">
-              Delete
-            </button>
-            <button className={form.tags__add} type="button">
-              Delete
-            </button>
-          </div>
+          {tagsInputs}
         </div>
 
         <div className={form.sendButtonBox}>
