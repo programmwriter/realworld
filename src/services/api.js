@@ -115,3 +115,27 @@ export const getSingleArticle = async (slug) => {
 
   return singleArticle;
 };
+
+export const createArticle = async (data, jwtToken) => {
+  const { body, title, description } = data;
+
+  const tagList = [];
+  for (const key in data) {
+    if (key.includes("tag")) {
+      tagList.push(data[key]);
+    }
+  }
+  const articleData = { article: { body, title, description, tagList } };
+
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": `application/json;charset=utf-8`,
+      Authorization: `Token ${jwtToken}`,
+    },
+    body: JSON.stringify(articleData),
+  };
+  const returnedArticle = await request(`${baseUrl}articles`, options);
+
+  return returnedArticle;
+};

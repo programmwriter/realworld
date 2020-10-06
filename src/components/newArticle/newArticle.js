@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 // import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { Modal } from "antd";
 import { useHistory } from "react-router-dom";
 // import { Link, useHistory } from "react-router-dom";
 import FormInput from "../formComponents/formInput";
 import Tag from "./tag";
-import { updateUser } from "../../services/api";
-import { updateUserProfile, setLogedIn } from "../../actions";
-
+import { createArticle } from "../../services/api";
 import "antd/dist/antd.css";
 import form from "../formComponents/form.module.scss";
 
@@ -25,7 +23,6 @@ const NewArticle = () => {
   // const isLogedIn = useSelector((state) => state.logedIn);
   const token = useSelector((state) => state.user.token);
 
-  const dispatch = useDispatch();
   const history = useHistory();
 
   // useEffect(() => {
@@ -36,19 +33,14 @@ const NewArticle = () => {
 
   const onSubmit = async (data) => {
     try {
-      const response = await updateUser(data, token);
+      const response = await createArticle(data, token);
 
       if (response.errors) {
         setErrors(response.errors);
         setVisible(true);
       }
 
-      if (response.user) {
-        dispatch(updateUserProfile(response.user));
-        dispatch(setLogedIn(true));
-        const { email } = response.user;
-        localStorage.setItem("email", email);
-        localStorage.setItem("password", data.password);
+      if (response.article) {
         history.push("/articles");
       }
     } catch (err) {
@@ -96,7 +88,6 @@ const NewArticle = () => {
 
   const tagsInputs = [];
   let last = false;
-
   for (let i = 1; i <= tagsCount; i++) {
     if (i === tagsCount) last = true;
     tagsInputs.push(
@@ -110,7 +101,7 @@ const NewArticle = () => {
         onAdd={addTagHandler}
         ref={register({
           required: { value: true, message: "this field is required" },
-          minLength: { value: 3, message: "too short" },
+          minLength: { value: 1, message: "too short" },
         })}
       />
     );
@@ -130,16 +121,6 @@ const NewArticle = () => {
             required: { value: true, message: "this field is required" },
             minLength: { value: 3, message: "too short" },
             maxLength: { value: 20, message: "too long" },
-            // validate: {
-            //   checkUsername: async (value) => {
-            //     if (value === usernameFromStore) {
-            //       return true;
-            //     }
-            //     return (
-            //       (await isUsernameFree(value)) || "this username is not free"
-            //     );
-            //   },
-            // },
           })}
         />
         <FormInput
@@ -151,10 +132,6 @@ const NewArticle = () => {
           ref={register({
             required: { value: true, message: "this field is required" },
             minLength: { value: 6, message: "too short" },
-            pattern: {
-              value: /\S+@\S+\.\S+/,
-              message: "email is notvalid",
-            },
           })}
         />
         <div className={form.body}>

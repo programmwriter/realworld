@@ -1,7 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-// import { useSelector, useDispatch } from 'react-redux';
-// import { useParams } from 'react-router-dom';
 
 import cls from "./tag.module.scss";
 
@@ -14,6 +12,7 @@ const Tag = React.forwardRef((props, ref) => {
           className={cls.tag__input}
           name={name}
           placeholder={placeholder}
+          // autoFocus = {last}
           type="text"
           errors={errors}
           ref={ref}

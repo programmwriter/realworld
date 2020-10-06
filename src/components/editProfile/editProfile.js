@@ -20,8 +20,6 @@ import form from "../formComponents/form.module.scss";
 // );
 
 const EditProfile = () => {
-  const { register, handleSubmit, errors } = useForm();
-
   const [error, setErrors] = useState();
   const [visible, setVisible] = useState(false);
 
@@ -34,6 +32,15 @@ const EditProfile = () => {
     image: imageFromStore,
   } = userFromStore;
   const passwordFromLS = localStorage.getItem("password");
+
+  const { register, handleSubmit, errors } = useForm({
+    defaultValues: {
+      username: usernameFromStore,
+      email: emailFromStore,
+      image: imageFromStore,
+      password: passwordFromLS,
+    },
+  });
 
   const dispatch = useDispatch();
   const history = useHistory();
