@@ -61,7 +61,17 @@ const Article = ({ article, isList }) => {
           </div>
           <div className={cls.article__tags}>{renderTags}</div>
         </div>
-        <UserView author={author} createdAt={createdAt} date />
+        <div className={cls.article__right}>
+          <UserView author={author} createdAt={createdAt} date />
+          <div className={cls.article__actions}>
+            <button type="button" className={cls.article__delete}>
+              Delete
+            </button>
+            <button type="button" className={cls.article__edit}>
+              Edit
+            </button>
+          </div>
+        </div>
       </div>
       <div className={cls.article__content}>
         {description}

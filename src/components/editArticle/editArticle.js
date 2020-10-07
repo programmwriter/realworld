@@ -6,7 +6,7 @@ import FormArticle from "../formComponents/formArticle";
 import { createArticle } from "../../services/api";
 import "antd/dist/antd.css";
 
-const NewArticle = () => {
+const EditArticle = () => {
   const [error, setErrors] = useState();
   const [visible, setVisible] = useState(false);
   const token = useSelector((state) => state.user.token);
@@ -62,4 +62,4 @@ const NewArticle = () => {
   }
   return <FormArticle onSubmit={onSubmit} isNew />;
 };
-export default NewArticle;
+export default EditArticle;

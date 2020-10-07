@@ -12,30 +12,28 @@
     margin-bottom: 10px;
     padding: 15px 15px 0 15px;
   }
-  &__top{
+  &__top {
     display: flex;
     align-items: center;
   }
-
   &__title {
     font-size: 20px;
     line-height: 28px;
     color: #1890ff;
     margin-right: 15px;
-    cursor:pointer;
+    cursor: pointer;
     border-color: transparent;
-    &:focus{
+    &:focus {
       border-color: transparent;
     }
   }
-
   &__like {
     font-size: 12px;
     line-height: 22px;
     color: rgba(0, 0, 0, 0.75);
     text-align: center;
   }
-  &__tags{
+  &__tags {
     display: flex;
     justify-content: flex-start;
   }
@@ -60,9 +58,30 @@
     padding-right: 240px;
     padding-bottom: 24px;
   }
-  &__heart{
+  &__heart {
     margin-right: 5px;
     color: rgba(0, 0, 0, 0.75);
+  }
+  &__delete {
+    padding: 6px 17px;
+    color: #f5222d;
+    height: 31.1px;
+    border: 1px solid #f5222d;
+    box-sizing: border-box;
+    border-radius: 5px;
+    font-size: 14px;
+    line-height: 22px;
+    margin-right: 12px;
+  }
+  &__edit {
+    padding: 6px 17px 5px 17px;
+    color: #52C41A;
+    height: 31.1px;
+    border: 1px solid #52C41A;
+    box-sizing: border-box;
+    border-radius: 5px;
+    font-size: 14px;
+    line-height: 22px;
   }
 }
 
@@ -89,5 +108,4 @@
     line-height: 22px;
     color: rgba(0, 0, 0, 0.5);
   }
-  
 }
