@@ -139,3 +139,38 @@ export const createArticle = async (data, jwtToken) => {
 
   return returnedArticle;
 };
+export const updateArticle = async (data, jwtToken) => {
+  const { body, title, description } = data;
+
+  const tagList = [];
+  for (const key in data) {
+    if (key.includes("tag")) {
+      tagList.push(data[key]);
+    }
+  }
+  const articleData = { article: { body, title, description, tagList } };
+
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": `application/json;charset=utf-8`,
+      Authorization: `Token ${jwtToken}`,
+    },
+    body: JSON.stringify(articleData),
+  };
+  const returnedArticle = await request(`${baseUrl}articles`, options);
+
+  return returnedArticle;
+};
+export const deleteArticle = async (slug, jwtToken) => {
+  const options = {
+    method: "DELETE",
+    headers: {
+      "Content-Type": `application/json;charset=utf-8`,
+      Authorization: `Token ${jwtToken}`,
+    },
+  };
+  await request(`${baseUrl}articles/${slug}`, options);
+
+  return "article deleted";
+};

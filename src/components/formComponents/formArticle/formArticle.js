@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
+import React, { useState, useEffect } from "react";
+import PropTypes, { arrayOf } from "prop-types";
 import { useForm } from "react-hook-form";
 import FormInput from "../formInput";
 import Tag from "../tag";
@@ -7,11 +7,35 @@ import Tag from "../tag";
 import cls from "./formArticle.module.scss";
 
 const FormArticle = (props) => {
-  const { onSubmit, isNew } = props;
-  // const { onSubmit, isNew, articleData } = props;
-  const { register, handleSubmit, errors } = useForm();
-
   const [tagsCount, setTagsCount] = useState(1);
+  const [tagsDefault, setTagsDefault] = useState({});
+
+  const { onSubmit, isNew, articleData = {} } = props;
+  const {
+    title: defaultTitle,
+    description: defaultDesc,
+    body: defaultBody,
+    tagList: tegsListFromProps,
+  } = articleData;
+
+  useEffect(() => {
+    if (!isNew) {
+      setTagsCount(tegsListFromProps.length);
+      const tagObject = {};
+      tegsListFromProps.reverse().forEach((tag, i) => {
+        tagObject[`tag${i + 1}`] = tag;
+      });
+      setTagsDefault(tagObject);
+    }
+  }, [isNew, tegsListFromProps]);
+
+  const { register, handleSubmit, errors } = useForm({
+    defaultValues: {
+      title: defaultTitle,
+      description: defaultDesc,
+      body: defaultBody,
+    },
+  });
 
   const deleteTagHandler = () => {
     setTagsCount((prevCount) => {
@@ -27,10 +51,6 @@ const FormArticle = (props) => {
     });
   };
 
-  if (isNew) {
-    console.log("FormArticle -> isNew", isNew);
-  }
-
   const tagsInputs = [];
   let last = false;
   for (let i = 1; i <= tagsCount; i++) {
@@ -44,6 +64,7 @@ const FormArticle = (props) => {
         last={last}
         onDelete={deleteTagHandler}
         onAdd={addTagHandler}
+        value={tagsDefault[`tag${i}`] || ""}
         ref={register({
           required: { value: true, message: "this field is required" },
           minLength: { value: 1, message: "too short" },
@@ -112,10 +133,21 @@ export default FormArticle;
 FormArticle.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   isNew: PropTypes.bool.isRequired,
-  // articleData: PropTypes.shape({
-  //   username: PropTypes.string,
-  //   bio: PropTypes.string,
-  //   image: PropTypes.string,
-  //   following: PropTypes.bool,
-  // }).isRequired,
+  articleData: PropTypes.shape({
+    slug: PropTypes.string,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    body: PropTypes.string,
+    tagList: arrayOf(PropTypes.string),
+    createdAt: PropTypes.string,
+    updatedAt: PropTypes.string,
+    favorited: PropTypes.bool,
+    favoritesCount: PropTypes.number,
+    author: PropTypes.shape({
+      username: PropTypes.string,
+      bio: PropTypes.string,
+      image: PropTypes.string,
+      following: PropTypes.bool,
+    }),
+  }).isRequired,
 };

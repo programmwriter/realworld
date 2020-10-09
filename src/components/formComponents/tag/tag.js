@@ -4,15 +4,23 @@ import PropTypes from "prop-types";
 import cls from "./tag.module.scss";
 
 const Tag = React.forwardRef((props, ref) => {
-  const { name, last, placeholder, errors, onDelete, onAdd } = props;
+  const {
+    name,
+    last,
+    placeholder,
+    errors,
+    onDelete,
+    onAdd,
+    value = "",
+  } = props;
   return (
     <div className={cls.tag__item}>
       <div className={cls.tag__input_box}>
         <input
           className={cls.tag__input}
           name={name}
+          defaultValue={value}
           placeholder={placeholder}
-          // autoFocus = {last}
           type="text"
           errors={errors}
           ref={ref}
@@ -36,6 +44,7 @@ Tag.propTypes = {
   onDelete: PropTypes.func.isRequired,
   onAdd: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,
   errors: PropTypes.objectOf(PropTypes.objectOf(PropTypes.string)).isRequired,
 };

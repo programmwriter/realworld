@@ -1,15 +1,18 @@
 import React from "react";
 import PropTypes, { arrayOf } from "prop-types";
+import { useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { HeartOutlined } from "@ant-design/icons";
 import Markdown from "markdown-to-jsx";
+import { Popconfirm } from "antd";
 import UserView from "../userView";
 
 import cls from "./article.module.scss";
 
-const Article = ({ article, isList }) => {
+const Article = ({ article, isList, onDelete }) => {
   const history = useHistory();
   const location = useLocation();
+  const username = useSelector((state) => state.user.username);
 
   const {
     createdAt,
@@ -21,6 +24,8 @@ const Article = ({ article, isList }) => {
     description,
     body,
   } = article;
+
+  const isOwnArticle = username === author.username && !isList;
 
   const handleClick = () => {
     const pushPath = `/articles/${slug}`;
@@ -63,19 +68,39 @@ const Article = ({ article, isList }) => {
         </div>
         <div className={cls.article__right}>
           <UserView author={author} createdAt={createdAt} date />
-          <div className={cls.article__actions}>
-            <button type="button" className={cls.article__delete}>
-              Delete
-            </button>
-            <button type="button" className={cls.article__edit}>
-              Edit
-            </button>
-          </div>
+          {isOwnArticle && (
+            <div className={cls.article__actions}>
+              <Popconfirm
+                placement="rightTop"
+                title="Are you sure to delete this article?"
+                onConfirm={onDelete}
+                okText="Yes"
+                cancelText="No"
+              >
+                <button type="button" className={cls.article__delete}>
+                  Delete
+                </button>
+              </Popconfirm>
+              <button
+                onClick={() => {
+                  history.push(`/articles/${slug}/edit`);
+                }}
+                type="button"
+                className={cls.article__edit}
+              >
+                Edit
+              </button>
+            </div>
+          )}
         </div>
       </div>
       <div className={cls.article__content}>
         {description}
-        {!isList && <Markdown>{body}</Markdown>}
+        {!isList && (
+          <div className={cls.article__markdown}>
+            <Markdown options={{ forceBlock: true }}>{body}</Markdown>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -84,6 +109,7 @@ const Article = ({ article, isList }) => {
 export default Article;
 
 Article.propTypes = {
+  onDelete: PropTypes.func.isRequired,
   article: PropTypes.shape({
     slug: PropTypes.string,
     title: PropTypes.string,

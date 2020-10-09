@@ -8,6 +8,7 @@ import SignIn from "../signIn";
 import SignUp from "../signUp";
 import EditProfile from "../editProfile";
 import NewArticle from "../newArticle";
+import EditArticle from "../editArticle";
 
 import cls from "./app.module.scss";
 import "antd/dist/antd.css";
@@ -24,6 +25,7 @@ function App() {
         <Route path="/articles" component={ArticlesList} exact />
         <Route path="/new-article" component={NewArticle} exact />
         <Route path="/articles/:slug" component={ArticlePage} exact />
+        <Route path="/articles/:slug/edit" component={EditArticle} exact />
       </div>
     </Router>
   );
