@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes, { arrayOf } from "prop-types";
 import { useSelector } from "react-redux";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { HeartOutlined } from "@ant-design/icons";
 import Markdown from "markdown-to-jsx";
 import { Popconfirm } from "antd";
@@ -11,7 +11,6 @@ import cls from "./article.module.scss";
 
 const Article = ({ article, isList, onDelete }) => {
   const history = useHistory();
-  const location = useLocation();
   const username = useSelector((state) => state.user.username);
 
   const {
@@ -27,15 +26,6 @@ const Article = ({ article, isList, onDelete }) => {
 
   const isOwnArticle = username === author.username && !isList;
 
-  const handleClick = () => {
-    const pushPath = `/articles/${slug}`;
-    const { pathname } = location;
-    if (pushPath === pathname) {
-      return;
-    }
-    history.push(pushPath);
-  };
-
   const renderTags = tagList.map((tag) => {
     return (
       <span key={tag} className={cls.article__tag}>
@@ -49,15 +39,13 @@ const Article = ({ article, isList, onDelete }) => {
       <div className={cls.article__header}>
         <div className={cls.article__left}>
           <div className={cls.article__top}>
-            <div
-              onClick={handleClick}
-              className={cls.article__title}
-              role="button"
-              tabIndex="0"
-              aria-hidden="true"
-            >
-              {title}
-            </div>
+            {isList ? (
+              <Link to={`/articles/${slug}`} className={cls.article__title}>
+                {title}
+              </Link>
+            ) : (
+              <div className={cls.article__title}>{title}</div>
+            )}
             <HeartOutlined
               className={cls.article__heart}
               style={{ fontSize: "16px" }}
@@ -67,7 +55,7 @@ const Article = ({ article, isList, onDelete }) => {
           <div className={cls.article__tags}>{renderTags}</div>
         </div>
         <div className={cls.article__right}>
-          <UserView author={author} createdAt={createdAt} date />
+          <UserView author={author} createdAt={createdAt} isArticle />
           {isOwnArticle && (
             <div className={cls.article__actions}>
               <Popconfirm
@@ -108,8 +96,12 @@ const Article = ({ article, isList, onDelete }) => {
 
 export default Article;
 
+Article.defaultProps = {
+  onDelete: () => {},
+};
+
 Article.propTypes = {
-  onDelete: PropTypes.func.isRequired,
+  onDelete: PropTypes.func,
   article: PropTypes.shape({
     slug: PropTypes.string,
     title: PropTypes.string,

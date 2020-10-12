@@ -25,7 +25,7 @@ const UserHeaderView = () => {
         Create article
       </Link>
       <Link to="/profile">
-        <UserView author={user} date={false} />
+        <UserView author={user} isArticle={false} />
       </Link>
 
       <button onClick={logoutHendler} className={cls.logOut} type="button">

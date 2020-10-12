@@ -23,8 +23,11 @@
     margin-right: 15px;
     cursor: pointer;
     border-color: transparent;
-    &:focus {
-      border-color: transparent;
+    &:hover{
+      color: darken(#1890ff, 10%);
+    }
+    &:target {
+      border-color: transparent;            
     }
   }
   &__like {

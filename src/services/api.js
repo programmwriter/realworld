@@ -139,7 +139,7 @@ export const createArticle = async (data, jwtToken) => {
 
   return returnedArticle;
 };
-export const updateArticle = async (data, jwtToken) => {
+export const updateArticle = async (data, slug, jwtToken) => {
   const { body, title, description } = data;
 
   const tagList = [];
@@ -151,14 +151,14 @@ export const updateArticle = async (data, jwtToken) => {
   const articleData = { article: { body, title, description, tagList } };
 
   const options = {
-    method: "POST",
+    method: "PUT",
     headers: {
       "Content-Type": `application/json;charset=utf-8`,
       Authorization: `Token ${jwtToken}`,
     },
     body: JSON.stringify(articleData),
   };
-  const returnedArticle = await request(`${baseUrl}articles`, options);
+  const returnedArticle = await request(`${baseUrl}articles/${slug}`, options);
 
   return returnedArticle;
 };

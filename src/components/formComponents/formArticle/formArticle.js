@@ -129,6 +129,9 @@ const FormArticle = (props) => {
   );
 };
 export default FormArticle;
+FormArticle.defaultProps = {
+  articleData: {},
+};
 
 FormArticle.propTypes = {
   onSubmit: PropTypes.func.isRequired,
@@ -149,5 +152,5 @@ FormArticle.propTypes = {
       image: PropTypes.string,
       following: PropTypes.bool,
     }),
-  }).isRequired,
+  }),
 };

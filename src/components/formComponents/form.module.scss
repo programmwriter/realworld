@@ -102,3 +102,15 @@ button {
     text-decoration: underline;
   }
 }
+.button {
+  height: 40px;
+  color: white;
+  width: 100%;
+  background: #1890ff;
+  border-radius: 4px;
+  margin-bottom: 8px;
+
+  &:hover {
+    background: darken(#1890ff, 10%);
+  }
+}
