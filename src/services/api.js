@@ -52,6 +52,22 @@ export const regUser = async (userData) => {
 
   return regData;
 };
+export const getCurrentUser = async (jwtToken) => {
+  if (!jwtToken) {
+    throw new Error("Missing user token");
+  }
+  const regOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      Authorization: `Token ${jwtToken}`,
+    },
+  };
+  const regData = await request(`${baseUrl}user`, regOptions);
+
+  return regData;
+};
+
 export const authUser = async (userData) => {
   if (!userData) {
     throw new Error("Missing user data");

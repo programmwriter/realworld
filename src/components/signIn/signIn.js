@@ -29,9 +29,8 @@ const SignIn = () => {
       if (response.user) {
         dispatch(authenticateUser(response.user));
         dispatch(setLogedIn(true));
-        const { email } = response.user;
-        localStorage.setItem("email", email);
-        localStorage.setItem("password", data.password);
+        const { token } = response.user;
+        localStorage.setItem("token", token);
         history.push("/articles");
       }
     } catch (err) {

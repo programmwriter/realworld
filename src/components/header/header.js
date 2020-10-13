@@ -1,8 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-// import classNames from "classnames";
-import Authrize from "../authorize";
+import Authorize from "../authorize";
 import UserHeaderView from "../userHeaderView";
 import cls from "./header.module.scss";
 
@@ -14,7 +13,7 @@ const Header = () => {
       <div className={cls.header__title}>
         <Link to="/articles">Realworld Blog</Link>
       </div>
-      {isLogedIn ? <UserHeaderView /> : <Authrize />}
+      {isLogedIn ? <UserHeaderView /> : <Authorize />}
     </div>
   );
 };

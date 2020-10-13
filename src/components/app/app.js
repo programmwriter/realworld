@@ -1,5 +1,5 @@
-import React from "react";
-
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Header from "../header";
 import ArticlesList from "../articlesList";
@@ -11,10 +11,35 @@ import NewArticle from "../newArticle";
 import EditArticle from "../editArticle";
 import PrivateRoute from "../routeComponents/privateRoute";
 
+import { setError, authenticateUser, setLogedIn } from "../../actions";
+import { getCurrentUser } from "../../services/api";
+
 import cls from "./app.module.scss";
 import "antd/dist/antd.css";
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const loginUser = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        if (token) {
+          const response = await getCurrentUser(token);
+          if (response.user) {
+            dispatch(authenticateUser(response.user));
+            dispatch(setLogedIn(true));
+          }
+        }
+      } catch (error) {
+        dispatch(setError(true));
+      }
+    };
+
+    loginUser();
+  }, []);
+
   return (
     <Router>
       <div className={cls.app}>

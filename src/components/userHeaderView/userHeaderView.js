@@ -12,8 +12,7 @@ const UserHeaderView = () => {
   const dispatch = useDispatch();
 
   const logoutHendler = () => {
-    localStorage.removeItem("email");
-    localStorage.removeItem("password");
+    localStorage.removeItem("token");
     history.go(0);
     dispatch(logoutUser);
   };
