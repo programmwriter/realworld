@@ -13,12 +13,6 @@ const NewArticle = () => {
 
   const history = useHistory();
 
-  // useEffect(() => {
-  //   if (!isLogedIn) {
-  //     history.push("/sign-in");
-  //   }
-  // }, [isLogedIn]);
-
   const onSubmit = async (data) => {
     try {
       const response = await createArticle(data, token);

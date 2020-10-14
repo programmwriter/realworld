@@ -1,3 +1,5 @@
+// import { method } from "lodash";
+
 const baseUrl = "https://conduit.productionready.io/api/";
 
 const request = async (url, options = {}) => {
@@ -26,7 +28,6 @@ export const isUsernameFree = async (username) => {
   }
   return true;
 };
-
 export const regUser = async (userData) => {
   if (!userData) {
     throw new Error("Missing user data");
@@ -67,7 +68,6 @@ export const getCurrentUser = async (jwtToken) => {
 
   return regData;
 };
-
 export const authUser = async (userData) => {
   if (!userData) {
     throw new Error("Missing user data");
@@ -118,10 +118,28 @@ export const updateUser = async (userData, jwtToken) => {
 
   return updateData;
 };
-export const getArticlesList = async (limit = 5, page = 1) => {
+export const getArticlesList = async (limit = 5, page = 1, jwtToken = "") => {
+  console.log("getArticlesList -> jwtToken", jwtToken);
+
+  let headers = {};
+  if (jwtToken) {
+    headers = {
+      "Content-Type": `application/json;charset=utf-8`,
+      Authorization: `Token ${jwtToken}`,
+    };
+  } else {
+    headers = {
+      "Content-Type": `application/json;charset=utf-8`,
+    };
+  }
   const offset = page === 1 ? 0 : (page - 1) * 5;
+  const options = {
+    method: "GET",
+    headers,
+  };
   const articlesList = await request(
-    `${baseUrl}articles?limit=${limit}&offset=${offset}`
+    `${baseUrl}articles?limit=${limit}&offset=${offset}`,
+    options
   );
 
   return articlesList;
@@ -131,7 +149,22 @@ export const getSingleArticle = async (slug) => {
 
   return singleArticle;
 };
+export const favoriteArticle = async (slug, jwtToken, favorite) => {
+  const actionMethod = favorite ? "DELETE" : "POST";
+  const options = {
+    method: actionMethod,
+    headers: {
+      "Content-Type": `application/json;charset=utf-8`,
+      Authorization: `Token ${jwtToken}`,
+    },
+  };
+  const returnedArticle = await request(
+    `${baseUrl}articles/${slug}/favorite`,
+    options
+  );
 
+  return returnedArticle;
+};
 export const createArticle = async (data, jwtToken) => {
   const { body, title, description } = data;
 

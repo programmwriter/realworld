@@ -1,17 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes, { arrayOf } from "prop-types";
 import { useSelector } from "react-redux";
 import { useHistory, Link } from "react-router-dom";
-import { HeartOutlined } from "@ant-design/icons";
+import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import Markdown from "markdown-to-jsx";
 import { Popconfirm } from "antd";
 import UserView from "../userView";
+import { favoriteArticle } from "../../services/api";
 
 import cls from "./article.module.scss";
 
 const Article = ({ article, isList, onDelete }) => {
+  const [stateArticle, setStateArticle] = useState(article);
+
   const history = useHistory();
   const username = useSelector((state) => state.user.username);
+  const token = useSelector((state) => state.user.token);
+  const logedIn = useSelector((state) => state.logedIn);
 
   const {
     createdAt,
@@ -19,12 +24,24 @@ const Article = ({ article, isList, onDelete }) => {
     slug,
     title,
     favoritesCount,
+    favorited,
     author,
     description,
     body,
-  } = article;
-
+  } = stateArticle;
+  console.log("favoriteArticleHandler -> favorited", favorited);
   const isOwnArticle = username === author.username && !isList;
+
+  const favoriteArticleHandler = async () => {
+    try {
+      if (logedIn) {
+        const response = await favoriteArticle(slug, token, favorited);
+        setStateArticle(response.article);
+      }
+    } catch (error) {
+      console.log("favoriteArticleHandler -> error", error);
+    }
+  };
 
   const renderTags = tagList.map((tag) => {
     return (
@@ -46,10 +63,20 @@ const Article = ({ article, isList, onDelete }) => {
             ) : (
               <div className={cls.article__title}>{title}</div>
             )}
-            <HeartOutlined
-              className={cls.article__heart}
-              style={{ fontSize: "16px" }}
-            />
+            {favorited ? (
+              <HeartFilled
+                onClick={favoriteArticleHandler}
+                className={cls.article__heart}
+                style={{ fontSize: "16px", color: "red" }}
+              />
+            ) : (
+              <HeartOutlined
+                onClick={favoriteArticleHandler}
+                className={cls.article__heart}
+                style={{ fontSize: "16px" }}
+              />
+            )}
+
             <span className={cls.article__like}>{favoritesCount}</span>
           </div>
           <div className={cls.article__tags}>{renderTags}</div>

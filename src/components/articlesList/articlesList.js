@@ -1,47 +1,39 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Pagination } from "antd";
 import {
   setPage,
-  recieveArticles,
+  // recieveArticles,
   setLoadingArticles,
   setError,
-  authenticateUser,
-  setLogedIn,
+  // authenticateUser,
+  // setLogedIn,
 } from "../../actions";
 import Article from "../article";
 import Loading from "../loading";
 import Error from "../error";
-import { getArticlesList, authUser } from "../../services/api";
+import { getArticlesList } from "../../services/api";
 
 import cls from "./articlesList.module.scss";
 import "./antPagination.scss";
 
 const ArticlesList = () => {
   const dispatch = useDispatch();
-
+  const [stateArticles, setStateArticles] = useState([]);
   const isError = useSelector((state) => state.error);
+  const token = useSelector((state) => state.user.token);
   const isLoading = useSelector((state) => state.loading.articles);
-  const storeArticles = useSelector((state) => state.articles);
+  const logedIn = useSelector((state) => state.logedIn);
+  // const storeArticles = useSelector((state) => state.articles);
   const page = useSelector((state) => state.page);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const email = localStorage.getItem("email");
-        const password = localStorage.getItem("password");
-        if (email) {
-          const response = await authUser({ email, password });
-          if (response.user) {
-            dispatch(authenticateUser(response.user));
-            dispatch(setLogedIn(true));
-          }
-        }
-
-        const { articles } = await getArticlesList(5, page);
-
-        dispatch(recieveArticles(articles));
+        const { articles } = await getArticlesList(5, page, token);
+        setStateArticles(articles);
         dispatch(setLoadingArticles(false));
+        dispatch(setError(false));
       } catch (error) {
         dispatch(setError(true));
         dispatch(setLoadingArticles(false));
@@ -52,9 +44,9 @@ const ArticlesList = () => {
     return () => {
       dispatch(setLoadingArticles(true));
     };
-  }, [page, dispatch]);
+  }, [page, dispatch, token, logedIn]);
 
-  const articlesList = storeArticles.map((article) => {
+  const articlesList = stateArticles.map((article) => {
     return <Article key={article.createdAt} article={article} isList />;
   });
 
