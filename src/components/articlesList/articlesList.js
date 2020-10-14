@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Pagination } from "antd";
-import {
-  setPage,
-  // recieveArticles,
-  setLoadingArticles,
-  setError,
-  // authenticateUser,
-  // setLogedIn,
-} from "../../actions";
+// import { setPage } from "../../actions";
 import Article from "../article";
 import Loading from "../loading";
 import Error from "../error";
@@ -20,29 +13,28 @@ import "./antPagination.scss";
 const ArticlesList = () => {
   const dispatch = useDispatch();
   const [stateArticles, setStateArticles] = useState([]);
-  const isError = useSelector((state) => state.error);
+  const [page, setPage] = useState(1);
+  const [isError, setError] = useState(false);
+  const [isLoading, setLoading] = useState(true);
   const token = useSelector((state) => state.user.token);
-  const isLoading = useSelector((state) => state.loading.articles);
   const logedIn = useSelector((state) => state.logedIn);
-  // const storeArticles = useSelector((state) => state.articles);
-  const page = useSelector((state) => state.page);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const { articles } = await getArticlesList(5, page, token);
         setStateArticles(articles);
-        dispatch(setLoadingArticles(false));
-        dispatch(setError(false));
+        setLoading(false);
+        setError(false);
       } catch (error) {
-        dispatch(setError(true));
-        dispatch(setLoadingArticles(false));
+        setError(true);
+        setLoading(false);
       }
     };
 
     fetchData();
     return () => {
-      dispatch(setLoadingArticles(true));
+      setLoading(true);
     };
   }, [page, dispatch, token, logedIn]);
 
@@ -51,7 +43,7 @@ const ArticlesList = () => {
   });
 
   const onChangePage = (changedPage) => {
-    dispatch(setPage(changedPage));
+    setPage(changedPage);
   };
 
   if (isError) {

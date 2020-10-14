@@ -54,6 +54,8 @@ const NewArticle = () => {
       </Modal>
     );
   }
-  return <FormArticle onSubmit={onSubmit} isNew />;
+  return (
+    <FormArticle onSubmit={onSubmit} isNew formTitle="Create new article" />
+  );
 };
 export default NewArticle;

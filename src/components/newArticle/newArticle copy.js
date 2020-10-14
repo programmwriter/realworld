@@ -1,17 +1,13 @@
 import React, { useState } from "react";
-// import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { Modal } from "antd";
 import { useHistory } from "react-router-dom";
-// import { Link, useHistory } from "react-router-dom";
 import FormInput from "../formComponents/formInput";
 import Tag from "../formComponents/tag";
 import { createArticle } from "../../services/api";
 import "antd/dist/antd.css";
 import form from "../formComponents/form.module.scss";
-
-// import cls from "./newArticle.module.scss";
 
 const NewArticle = () => {
   const { register, handleSubmit, errors } = useForm();
@@ -19,17 +15,9 @@ const NewArticle = () => {
   const [error, setErrors] = useState();
   const [visible, setVisible] = useState(false);
   const [tagsCount, setTagsCount] = useState(1);
-
-  // const isLogedIn = useSelector((state) => state.logedIn);
   const token = useSelector((state) => state.user.token);
 
   const history = useHistory();
-
-  // useEffect(() => {
-  //   if (!isLogedIn) {
-  //     history.push("/sign-in");
-  //   }
-  // }, [isLogedIn]);
 
   const onSubmit = async (data) => {
     try {

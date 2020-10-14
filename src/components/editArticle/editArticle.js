@@ -30,7 +30,7 @@ const EditArticle = () => {
     };
 
     fetchData();
-  }, []);
+  }, [slug]);
 
   const onSubmit = async (data) => {
     try {
@@ -81,7 +81,12 @@ const EditArticle = () => {
   }
 
   return (
-    <FormArticle onSubmit={onSubmit} isNew={false} articleData={article} />
+    <FormArticle
+      onSubmit={onSubmit}
+      isNew={false}
+      articleData={article}
+      formTitle="Edit article"
+    />
   );
 };
 export default EditArticle;

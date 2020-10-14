@@ -11,7 +11,7 @@ import NewArticle from "../newArticle";
 import EditArticle from "../editArticle";
 import PrivateRoute from "../routeComponents/privateRoute";
 
-import { setError, authenticateUser, setLogedIn } from "../../actions";
+import { authenticateUser, setLogedIn } from "../../actions";
 import { getCurrentUser } from "../../services/api";
 
 import cls from "./app.module.scss";
@@ -33,12 +33,12 @@ function App() {
           }
         }
       } catch (error) {
-        dispatch(setError(true));
+        console.log("loginUser -> error", error);
       }
     };
 
     loginUser();
-  }, []);
+  }, [dispatch]);
 
   return (
     <Router>
@@ -47,8 +47,8 @@ function App() {
         <Route path="/" component={ArticlesList} exact />
         <Route path="/sign-in" component={SignIn} exact />
         <Route path="/sign-up" component={SignUp} exact />
-        <Route path="/profile" component={EditProfile} exact />
         <Route path="/articles" component={ArticlesList} exact />
+        <PrivateRoute component={EditProfile} path="/profile" exact />
         <PrivateRoute component={NewArticle} path="/new-article" exact />
         <PrivateRoute
           component={EditArticle}

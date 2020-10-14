@@ -29,7 +29,6 @@ const Article = ({ article, isList, onDelete }) => {
     description,
     body,
   } = stateArticle;
-  console.log("favoriteArticleHandler -> favorited", favorited);
   const isOwnArticle = username === author.username && !isList;
 
   const favoriteArticleHandler = async () => {

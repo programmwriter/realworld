@@ -18,6 +18,7 @@ const UserHeaderView = () => {
   };
 
   const user = useSelector((state) => state.user);
+
   return (
     <div className={cls.userHeaderView}>
       <Link to="/new-article" className={cls.createArticle}>

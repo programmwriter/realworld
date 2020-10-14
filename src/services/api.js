@@ -97,14 +97,8 @@ export const updateUser = async (userData, jwtToken) => {
     throw new Error("Missing user data");
   }
 
-  const { email, password, image, username } = userData;
   const regUserData = {
-    user: {
-      email,
-      password,
-      image,
-      username,
-    },
+    user: { ...userData },
   };
   const regOptions = {
     method: "PUT",
@@ -119,8 +113,6 @@ export const updateUser = async (userData, jwtToken) => {
   return updateData;
 };
 export const getArticlesList = async (limit = 5, page = 1, jwtToken = "") => {
-  console.log("getArticlesList -> jwtToken", jwtToken);
-
   let headers = {};
   if (jwtToken) {
     headers = {

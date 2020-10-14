@@ -10,7 +10,7 @@ const FormArticle = (props) => {
   const [tagsCount, setTagsCount] = useState(1);
   const [tagsDefault, setTagsDefault] = useState({});
 
-  const { onSubmit, isNew, articleData = {} } = props;
+  const { onSubmit, isNew, articleData = {}, formTitle } = props;
   const {
     title: defaultTitle,
     description: defaultDesc,
@@ -75,7 +75,7 @@ const FormArticle = (props) => {
 
   return (
     <div className={cls.article__container}>
-      <h1 className={cls.title}>Create new article</h1>
+      <h1 className={cls.title}>{formTitle}</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormInput
           key={1}
@@ -134,6 +134,7 @@ FormArticle.defaultProps = {
 };
 
 FormArticle.propTypes = {
+  formTitle: PropTypes.string.isRequired,
   onSubmit: PropTypes.func.isRequired,
   isNew: PropTypes.bool.isRequired,
   articleData: PropTypes.shape({

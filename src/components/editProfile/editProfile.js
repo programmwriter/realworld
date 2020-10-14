@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { Modal } from "antd";
@@ -23,7 +23,6 @@ const EditProfile = () => {
   const [error, setErrors] = useState();
   const [visible, setVisible] = useState(false);
 
-  const isLogedIn = useSelector((state) => state.logedIn);
   const userFromStore = useSelector((state) => state.user);
   const {
     token,
@@ -31,26 +30,17 @@ const EditProfile = () => {
     email: emailFromStore,
     image: imageFromStore,
   } = userFromStore;
-  const passwordFromLS = localStorage.getItem("password");
 
   const { register, handleSubmit, errors } = useForm({
     defaultValues: {
       username: usernameFromStore,
       email: emailFromStore,
       image: imageFromStore,
-      password: passwordFromLS,
     },
   });
 
   const dispatch = useDispatch();
   const history = useHistory();
-
-  useEffect(() => {
-    if (!isLogedIn) {
-      history.push("/sign-in");
-    }
-    // eslint-disable-next-line
-  }, [isLogedIn]);
 
   const onSubmit = async (data) => {
     try {
@@ -110,7 +100,6 @@ const EditProfile = () => {
           type="text"
           errors={errors}
           ref={register({
-            required: { value: true, message: "this field is required" },
             minLength: { value: 3, message: "too short" },
             maxLength: { value: 20, message: "too long" },
             validate: {
@@ -133,7 +122,6 @@ const EditProfile = () => {
           value={emailFromStore}
           errors={errors}
           ref={register({
-            required: { value: true, message: "this field is required" },
             minLength: { value: 6, message: "too short" },
             pattern: {
               value: /\S+@\S+\.\S+/,
@@ -146,10 +134,9 @@ const EditProfile = () => {
           label="New password"
           name="password"
           type="password"
-          value={passwordFromLS}
+          value=""
           errors={errors}
           ref={register({
-            required: { value: true, message: "this field is required" },
             minLength: { value: 8, message: "too short" },
             maxLength: { value: 40, message: "too long" },
           })}
@@ -162,7 +149,6 @@ const EditProfile = () => {
           value={imageFromStore}
           errors={errors}
           ref={register({
-            required: { value: true, message: "this field is required" },
             minLength: { value: 8, message: "too short" },
             // pattern: {
             //   value: new RegExp(myRE),
