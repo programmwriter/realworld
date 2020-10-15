@@ -3,10 +3,11 @@ import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { Divider, Modal } from "antd";
 import { Link, useHistory } from "react-router-dom";
+import isEmail from "validator/es/lib/isEmail";
 import FormInput from "../formComponents/formInput";
 import form from "../formComponents/form.module.scss";
 import { regUser, isUsernameFree } from "../../services/api";
-import { registerUser, setLogedIn } from "../../actions";
+import { registerUser, setLogedIn, setToken } from "../../actions";
 import "antd/dist/antd.css";
 
 const SignUp = () => {
@@ -29,9 +30,9 @@ const SignUp = () => {
       if (response.user) {
         dispatch(registerUser(response.user));
         dispatch(setLogedIn(true));
-        const { username, password } = response.user;
-        localStorage.setItem("username", username);
-        localStorage.setItem("password", password);
+        const { token } = response.user;
+        dispatch(setToken(token));
+        localStorage.setItem("token", token);
         history.push("/articles");
       }
     } catch (err) {
@@ -73,13 +74,20 @@ const SignUp = () => {
           type="text"
           errors={errors}
           ref={register({
-            required: { value: true, message: "this field is required" },
-            minLength: { value: 3, message: "too short" },
-            maxLength: { value: 20, message: "too long" },
+            required: { value: true, message: "Enter username" },
+            minLength: {
+              value: 3,
+              message: "Your username needs to be at least 3 characters.",
+            },
+            maxLength: {
+              value: 20,
+              message: "Your username needs to be at maximum 20 characters.",
+            },
             validate: {
               checkUsername: async (value) => {
                 return (
-                  (await isUsernameFree(value)) || "this username is not free"
+                  (await isUsernameFree(value)) ||
+                  "Username has already been taken"
                 );
               },
             },
@@ -91,11 +99,13 @@ const SignUp = () => {
           type="text"
           errors={errors}
           ref={register({
-            required: { value: true, message: "this field is required" },
-            minLength: { value: 6, message: "too short" },
-            pattern: {
-              value: /\S+@\S+\.\S+/,
-              message: "email is notvalid",
+            required: { value: true, message: "Enter email" },
+            minLength: {
+              value: 6,
+              message: "Your email needs to be at least 6 characters.",
+            },
+            validate: () => {
+              return isEmail(watch("email")) || "Enter correct email";
             },
           })}
         />
@@ -105,9 +115,15 @@ const SignUp = () => {
           type="password"
           errors={errors}
           ref={register({
-            required: { value: true, message: "this field is required" },
-            minLength: { value: 8, message: "too short" },
-            maxLength: { value: 40, message: "too long" },
+            required: { value: true, message: "Enter valid password" },
+            minLength: {
+              value: 8,
+              message: "Your password needs to be at least 8 characters.",
+            },
+            maxLength: {
+              value: 40,
+              message: "Your password needs to be at maximum 40 characters.",
+            },
           })}
         />
         <FormInput
@@ -117,11 +133,14 @@ const SignUp = () => {
           errors={errors}
           ref={register({
             message: "passwords not match",
-            required: { value: true, message: "this field is required" },
-            minLength: { value: 8, message: "too short" },
+            required: { value: true, message: "Repeat password" },
+            minLength: {
+              value: 8,
+              message: "Your password needs to be at least 8 characters.",
+            },
             validate: {
               checkWithPass: (val) => {
-                return val === `${passwordVal}` || "passwords not match";
+                return val === `${passwordVal}` || "Passwords must match";
               },
             },
           })}
@@ -135,16 +154,19 @@ const SignUp = () => {
               type="checkbox"
               name="agree"
               ref={register({
-                required: { value: true, message: "this field is required" },
+                required: {
+                  value: true,
+                  message: "Please accept the terms and conditions to continue",
+                },
               })}
               defaultChecked
             />
             <span className={form.checkmark} />
-            {errors.agree && (
-              <p style={{ color: "tomato" }}>{`${errors.agree.message}`}</p>
-            )}
           </label>
         </div>
+        {errors.agree && (
+          <p style={{ color: "red" }}>{`${errors.agree.message}`}</p>
+        )}
 
         <button className={form.button} type="submit">
           Create

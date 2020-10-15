@@ -2,22 +2,15 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { Modal } from "antd";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import isEmail from "validator/es/lib/isEmail";
+import isURL from "validator/es/lib/isURL";
 import FormInput from "../formComponents/formInput";
 import { updateUser, isUsernameFree } from "../../services/api";
 import { updateUserProfile, setLogedIn } from "../../actions";
 
 import "antd/dist/antd.css";
 import form from "../formComponents/form.module.scss";
-
-// const myRE = new RegExp(
-//   [
-//     '^(([^<>()[\\]\\.,;:\\s@\\"]+(\\.[^<>(),[\\]\\.,;:\\s@\\"]+)*)',
-//     '|(\\".+\\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.',
-//     "[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+",
-//     "[a-zA-Z]{2,}))$",
-//   ].join("")
-// );
 
 const EditProfile = () => {
   const [error, setErrors] = useState();
@@ -31,7 +24,7 @@ const EditProfile = () => {
     image: imageFromStore,
   } = userFromStore;
 
-  const { register, handleSubmit, errors } = useForm({
+  const { register, handleSubmit, errors, watch } = useForm({
     defaultValues: {
       username: usernameFromStore,
       email: emailFromStore,
@@ -100,8 +93,14 @@ const EditProfile = () => {
           type="text"
           errors={errors}
           ref={register({
-            minLength: { value: 3, message: "too short" },
-            maxLength: { value: 20, message: "too long" },
+            minLength: {
+              value: 3,
+              message: "Your username needs to be at least 3 characters.",
+            },
+            maxLength: {
+              value: 20,
+              message: "Your username needs to be at maximum 20 characters.",
+            },
             validate: {
               checkUsername: async (value) => {
                 if (value === usernameFromStore) {
@@ -122,10 +121,12 @@ const EditProfile = () => {
           value={emailFromStore}
           errors={errors}
           ref={register({
-            minLength: { value: 6, message: "too short" },
-            pattern: {
-              value: /\S+@\S+\.\S+/,
-              message: "email is notvalid",
+            minLength: {
+              value: 6,
+              message: "Your email needs to be at least 6 characters.",
+            },
+            validate: () => {
+              return isEmail(watch("email")) || "Enter correct email";
             },
           })}
         />
@@ -137,8 +138,15 @@ const EditProfile = () => {
           value=""
           errors={errors}
           ref={register({
-            minLength: { value: 8, message: "too short" },
-            maxLength: { value: 40, message: "too long" },
+            required: { value: true, message: "Enter password" },
+            minLength: {
+              value: 8,
+              message: "Your password needs to be at least 8 characters.",
+            },
+            maxLength: {
+              value: 40,
+              message: "Your password needs to be at maximum 40 characters.",
+            },
           })}
         />
         <FormInput
@@ -150,22 +158,15 @@ const EditProfile = () => {
           errors={errors}
           ref={register({
             minLength: { value: 8, message: "too short" },
-            // pattern: {
-            //   value: new RegExp(myRE),
-            //   message: "url is notvalid",
-            // },
+            validate: () => {
+              return isURL(watch("image")) || "Enter correct url";
+            },
           })}
         />
 
         <button className={form.button} type="submit">
           Save
         </button>
-        <p className={form.accExist}>
-          Don’t have an account?&nbsp;
-          <Link className={form.accExist__link} to="/sign-up">
-            Sign Up.
-          </Link>
-        </p>
       </form>
     </div>
   );

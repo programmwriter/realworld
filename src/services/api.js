@@ -136,8 +136,23 @@ export const getArticlesList = async (limit = 5, page = 1, jwtToken = "") => {
 
   return articlesList;
 };
-export const getSingleArticle = async (slug) => {
-  const singleArticle = await request(`${baseUrl}articles/${slug}`);
+export const getSingleArticle = async (slug, jwtToken = "") => {
+  let headers = {};
+  if (jwtToken) {
+    headers = {
+      "Content-Type": `application/json;charset=utf-8`,
+      Authorization: `Token ${jwtToken}`,
+    };
+  } else {
+    headers = {
+      "Content-Type": `application/json;charset=utf-8`,
+    };
+  }
+  const options = {
+    method: "GET",
+    headers,
+  };
+  const singleArticle = await request(`${baseUrl}articles/${slug}`, options);
 
   return singleArticle;
 };

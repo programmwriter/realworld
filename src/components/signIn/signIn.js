@@ -5,7 +5,7 @@ import { Modal } from "antd";
 import { Link, useHistory } from "react-router-dom";
 import FormInput from "../formComponents/formInput";
 import { authUser } from "../../services/api";
-import { authenticateUser, setLogedIn } from "../../actions";
+import { authenticateUser, setLogedIn, setToken } from "../../actions";
 
 import "antd/dist/antd.css";
 import form from "../formComponents/form.module.scss";
@@ -30,6 +30,7 @@ const SignIn = () => {
         dispatch(authenticateUser(response.user));
         dispatch(setLogedIn(true));
         const { token } = response.user;
+        dispatch(setToken(token));
         localStorage.setItem("token", token);
         history.push("/articles");
       }
@@ -73,11 +74,14 @@ const SignIn = () => {
           type="text"
           errors={errors}
           ref={register({
-            required: { value: true, message: "this field is required" },
-            minLength: { value: 6, message: "too short" },
+            required: { value: true, message: "Enter email" },
+            minLength: {
+              value: 6,
+              message: "Your email needs to be at least 6 characters.",
+            },
             pattern: {
               value: /\S+@\S+\.\S+/,
-              message: "email is notvalid",
+              message: "Enter valid email",
             },
           })}
         />
@@ -88,9 +92,15 @@ const SignIn = () => {
           type="password"
           errors={errors}
           ref={register({
-            required: { value: true, message: "this field is required" },
-            minLength: { value: 8, message: "too short" },
-            maxLength: { value: 40, message: "too long" },
+            required: { value: true, message: "Enter valid password" },
+            minLength: {
+              value: 8,
+              message: "Your password needs to be at least 8 characters.",
+            },
+            maxLength: {
+              value: 40,
+              message: "Your password needs to be at maximum 40 characters.",
+            },
           })}
         />
 

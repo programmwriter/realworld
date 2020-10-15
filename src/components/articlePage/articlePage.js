@@ -14,12 +14,12 @@ const ArticlePage = () => {
   const [isError, setError] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [stateArticle, setStateArticle] = useState({});
-  const token = useSelector((state) => state.user.token);
+  const token = useSelector((state) => state.token);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { article } = await getSingleArticle(slug);
+        const { article } = await getSingleArticle(slug, token);
 
         setStateArticle(article);
         setLoading(false);
@@ -33,7 +33,7 @@ const ArticlePage = () => {
     return () => {
       setLoading(true);
     };
-  }, [slug]);
+  }, [slug, token]);
 
   if (isError) {
     return <Error />;

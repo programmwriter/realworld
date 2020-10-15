@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes, { arrayOf } from "prop-types";
 import { useSelector } from "react-redux";
 import { useHistory, Link } from "react-router-dom";
@@ -15,8 +15,12 @@ const Article = ({ article, isList, onDelete }) => {
 
   const history = useHistory();
   const username = useSelector((state) => state.user.username);
-  const token = useSelector((state) => state.user.token);
+  const token = useSelector((state) => state.token);
   const logedIn = useSelector((state) => state.logedIn);
+
+  useEffect(() => {
+    setStateArticle(article);
+  }, [article]);
 
   const {
     createdAt,
@@ -29,6 +33,7 @@ const Article = ({ article, isList, onDelete }) => {
     description,
     body,
   } = stateArticle;
+
   const isOwnArticle = username === author.username && !isList;
 
   const favoriteArticleHandler = async () => {
