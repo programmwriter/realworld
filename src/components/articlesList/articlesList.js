@@ -16,7 +16,7 @@ const ArticlesList = () => {
   const [page, setPage] = useState(1);
   const [isError, setError] = useState(false);
   const [isLoading, setLoading] = useState(true);
-  const token = useSelector((state) => state.token);
+  const token = useSelector((state) => state.user.token);
   const logedIn = useSelector((state) => state.logedIn);
 
   useEffect(() => {

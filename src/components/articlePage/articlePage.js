@@ -14,7 +14,7 @@ const ArticlePage = () => {
   const [isError, setError] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [stateArticle, setStateArticle] = useState({});
-  const token = useSelector((state) => state.token);
+  const token = useSelector((state) => state.user.token);
 
   useEffect(() => {
     const fetchData = async () => {

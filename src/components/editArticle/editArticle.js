@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Modal } from "antd";
 import { useHistory, useParams } from "react-router-dom";
+import { Result, Button } from "antd";
 import FormArticle from "../formComponents/formArticle";
 import { getSingleArticle, updateArticle } from "../../services/api";
 import Loading from "../loading";
@@ -13,8 +13,8 @@ const EditArticle = () => {
 
   const [article, setArticle] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [errorServerValidation, setErrorServerValidation] = useState();
   const [error, setErrors] = useState();
-  const [visible, setVisible] = useState(false);
   const token = useSelector((state) => state.user.token);
 
   useEffect(() => {
@@ -25,7 +25,6 @@ const EditArticle = () => {
         setIsLoading(false);
       } catch (errorFromFetch) {
         setErrors(errorFromFetch);
-        setVisible(true);
       }
     };
 
@@ -37,8 +36,7 @@ const EditArticle = () => {
       const response = await updateArticle(data, slug, token);
 
       if (response.errors) {
-        setErrors(response.errors);
-        setVisible(true);
+        setErrorServerValidation(response.errors);
       }
 
       if (response.article) {
@@ -47,32 +45,26 @@ const EditArticle = () => {
       }
     } catch (err) {
       setErrors(err);
-      setVisible(true);
     }
   };
 
   if (error) {
-    const errorsNames = Object.keys(error);
-    const errorMsgs = errorsNames.map((err) => {
-      const msgs = error[err].join(` and `);
-      return <p style={{ color: "red" }}>{`${err}: ${msgs}`}</p>;
-    });
-
     return (
-      <Modal
-        title="Basic Modal"
-        visible={visible}
-        onOk={() => {
-          setVisible(false);
-          history.go(0);
-        }}
-        onCancel={() => {
-          setVisible(false);
-          history.go(0);
-        }}
-      >
-        {errorMsgs}
-      </Modal>
+      <Result
+        status="warning"
+        title={`There are some problems with your operation. ${error}`}
+        extra={
+          <Button
+            onClick={() => {
+              history.push("/edit");
+            }}
+            type="primary"
+            key="console"
+          >
+            Go Console
+          </Button>
+        }
+      />
     );
   }
 
@@ -86,6 +78,7 @@ const EditArticle = () => {
       isNew={false}
       articleData={article}
       formTitle="Edit article"
+      error={errorServerValidation}
     />
   );
 };

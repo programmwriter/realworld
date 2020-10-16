@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { Modal } from "antd";
+import { Alert, Result, Button } from "antd";
 import { useHistory } from "react-router-dom";
 import isEmail from "validator/es/lib/isEmail";
 import isURL from "validator/es/lib/isURL";
@@ -13,8 +13,8 @@ import "antd/dist/antd.css";
 import form from "../formComponents/form.module.scss";
 
 const EditProfile = () => {
+  const [errorServerValidation, setErrorServerValidation] = useState();
   const [error, setErrors] = useState();
-  const [visible, setVisible] = useState(false);
 
   const userFromStore = useSelector((state) => state.user);
   const {
@@ -40,16 +40,14 @@ const EditProfile = () => {
       const response = await updateUser(data, token);
 
       if (response.errors) {
-        setErrors(response.errors);
-        setVisible(true);
+        setErrorServerValidation(response.errors);
       }
 
       if (response.user) {
         dispatch(updateUserProfile(response.user));
         dispatch(setLogedIn(true));
-        const { email } = response.user;
-        localStorage.setItem("email", email);
-        localStorage.setItem("password", data.password);
+        const { user } = response;
+        localStorage.setItem("user", JSON.stringify(user));
         history.push("/articles");
       }
     } catch (err) {
@@ -57,32 +55,47 @@ const EditProfile = () => {
     }
   };
 
-  if (error) {
+  const errorHandler = () => {
     const errorsNames = Object.keys(error);
     const errorMsgs = errorsNames.map((err) => {
       const msgs = error[err].join(` and `);
-      return <p style={{ color: "red" }}>{`${err}: ${msgs}`}</p>;
+      return `${err} ${msgs}`;
     });
 
     return (
-      <Modal
-        title="Basic Modal"
-        visible={visible}
-        onOk={() => {
-          setVisible(false);
-          history.go(0);
-        }}
-        onCancel={() => {
-          setVisible(false);
-          history.go(0);
-        }}
-      >
-        {errorMsgs}
-      </Modal>
+      <Alert
+        style={{ marginBottom: "10px" }}
+        message={errorMsgs}
+        type="warning"
+        showIcon
+        closable
+      />
+    );
+  };
+
+  if (error) {
+    return (
+      <Result
+        status="warning"
+        title={`There are some problems with your operation. ${error}`}
+        extra={
+          <Button
+            onClick={() => {
+              history.push("/profile");
+            }}
+            type="primary"
+            key="console"
+          >
+            Back
+          </Button>
+        }
+      />
     );
   }
+
   return (
     <div className={form.container}>
+      {errorServerValidation && errorHandler()}
       <h1 className={form.title}>Edit Profile</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormInput

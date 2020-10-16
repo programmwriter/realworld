@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { Divider, Modal } from "antd";
+import { Divider, Alert, Result, Button } from "antd";
 import { Link, useHistory } from "react-router-dom";
 import isEmail from "validator/es/lib/isEmail";
 import FormInput from "../formComponents/formInput";
 import form from "../formComponents/form.module.scss";
 import { regUser, isUsernameFree } from "../../services/api";
-import { registerUser, setLogedIn, setToken } from "../../actions";
+import { registerUser, setLogedIn } from "../../actions";
 import "antd/dist/antd.css";
 
 const SignUp = () => {
   const { register, watch, handleSubmit, errors } = useForm();
+  const [errorServerValidation, setErrorServerValidation] = useState();
   const [error, setErrors] = useState();
-  const [visible, setVisible] = useState(false);
   const passwordVal = watch("password", "");
   const dispatch = useDispatch();
   const history = useHistory();
@@ -23,16 +23,14 @@ const SignUp = () => {
       const response = await regUser(data);
 
       if (response.errors) {
-        setErrors(response.errors);
-        setVisible(true);
+        setErrorServerValidation(response.errors);
       }
 
       if (response.user) {
         dispatch(registerUser(response.user));
         dispatch(setLogedIn(true));
-        const { token } = response.user;
-        dispatch(setToken(token));
-        localStorage.setItem("token", token);
+        const { user } = response;
+        localStorage.setItem("user", JSON.stringify(user));
         history.push("/articles");
       }
     } catch (err) {
@@ -40,32 +38,46 @@ const SignUp = () => {
     }
   };
 
-  if (error) {
+  const errorHandler = () => {
     const errorsNames = Object.keys(error);
     const errorMsgs = errorsNames.map((err) => {
       const msgs = error[err].join(` and `);
-      return <p style={{ color: "red" }}>{`${err}: ${msgs}`}</p>;
+      return `${err} ${msgs}`;
     });
 
     return (
-      <Modal
-        title="Basic Modal"
-        visible={visible}
-        onOk={() => {
-          setVisible(false);
-          history.go(0);
-        }}
-        onCancel={() => {
-          setVisible(false);
-          history.go(0);
-        }}
-      >
-        {errorMsgs}
-      </Modal>
+      <Alert
+        style={{ marginBottom: "10px" }}
+        message={errorMsgs}
+        type="warning"
+        showIcon
+        closable
+      />
+    );
+  };
+  if (error) {
+    return (
+      <Result
+        status="warning"
+        title={`There are some problems with your operation. ${error}`}
+        extra={
+          <Button
+            onClick={() => {
+              history.push("/sign-up");
+            }}
+            type="primary"
+            key="console"
+          >
+            Back
+          </Button>
+        }
+      />
     );
   }
+
   return (
     <div className={form.container}>
+      {errorServerValidation && errorHandler()}
       <h1 className={form.title}>Create new account</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormInput

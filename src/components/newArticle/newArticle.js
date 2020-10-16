@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { Modal } from "antd";
 import { useHistory } from "react-router-dom";
+import { Result, Button } from "antd";
 import FormArticle from "../formComponents/formArticle";
 import { createArticle } from "../../services/api";
 import "antd/dist/antd.css";
 
 const NewArticle = () => {
+  const [errorServerValidation, setErrorServerValidation] = useState();
   const [error, setErrors] = useState();
-  const [visible, setVisible] = useState(false);
   const token = useSelector((state) => state.user.token);
 
   const history = useHistory();
@@ -18,8 +18,7 @@ const NewArticle = () => {
       const response = await createArticle(data, token);
 
       if (response.errors) {
-        setErrors(response.errors);
-        setVisible(true);
+        setErrorServerValidation(response.errors);
       }
 
       if (response.article) {
@@ -31,31 +30,32 @@ const NewArticle = () => {
   };
 
   if (error) {
-    const errorsNames = Object.keys(error);
-    const errorMsgs = errorsNames.map((err) => {
-      const msgs = error[err].join(` and `);
-      return <p style={{ color: "red" }}>{`${err}: ${msgs}`}</p>;
-    });
-
     return (
-      <Modal
-        title="Basic Modal"
-        visible={visible}
-        onOk={() => {
-          setVisible(false);
-          history.go(0);
-        }}
-        onCancel={() => {
-          setVisible(false);
-          history.go(0);
-        }}
-      >
-        {errorMsgs}
-      </Modal>
+      <Result
+        status="warning"
+        title={`There are some problems with your operation. ${error}`}
+        extra={
+          <Button
+            onClick={() => {
+              history.push("/new-article");
+            }}
+            type="primary"
+            key="console"
+          >
+            Go Console
+          </Button>
+        }
+      />
     );
   }
+
   return (
-    <FormArticle onSubmit={onSubmit} isNew formTitle="Create new article" />
+    <FormArticle
+      onSubmit={onSubmit}
+      isNew
+      formTitle="Create new article"
+      error={errorServerValidation}
+    />
   );
 };
 export default NewArticle;

@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { Link, useHistory } from "react-router-dom";
-import { logoutUser, deleteToken } from "../../actions";
+import { logoutUser } from "../../actions";
 import UserView from "../userView";
 
 import cls from "./userHeaderView.module.scss";
@@ -12,10 +12,9 @@ const UserHeaderView = () => {
   const dispatch = useDispatch();
 
   const logoutHendler = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     history.go(0);
     dispatch(logoutUser);
-    dispatch(deleteToken);
   };
 
   const user = useSelector((state) => state.user);

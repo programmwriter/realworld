@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Header from "../header";
@@ -11,53 +11,50 @@ import NewArticle from "../newArticle";
 import EditArticle from "../editArticle";
 import PrivateRoute from "../routeComponents/privateRoute";
 import LogedInRoute from "../routeComponents/logedInRoute";
+import Loading from "../loading";
 
-import { authenticateUser, setLogedIn, setToken } from "../../actions";
-import { getCurrentUser } from "../../services/api";
+import { authenticateUser, setLogedIn } from "../../actions";
 
 import cls from "./app.module.scss";
 import "antd/dist/antd.css";
 
 function App() {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loginUser = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (token) {
-          dispatch(setToken(token));
-          dispatch(setLogedIn(true));
-          const response = await getCurrentUser(token);
-          if (response.user) {
-            dispatch(authenticateUser(response.user));
-            dispatch(setLogedIn(true));
-          }
-        }
-      } catch (error) {
-        console.log("loginUser -> error", error);
-      }
-    };
-
-    loginUser();
+    const localUser = localStorage.getItem("user");
+    if (localUser) {
+      dispatch(setLogedIn(true));
+      dispatch(authenticateUser(JSON.parse(localUser)));
+      dispatch(setLogedIn(true));
+      setIsLoading(false);
+    }
+    setIsLoading(false);
   }, [dispatch]);
 
   return (
     <Router>
       <div className={cls.app}>
         <Header />
-        <Route path="/" component={ArticlesList} exact />
-        <LogedInRoute path="/sign-in" component={SignIn} exact />
-        <LogedInRoute path="/sign-up" component={SignUp} exact />
-        <Route path="/articles" component={ArticlesList} exact />
-        <PrivateRoute component={EditProfile} path="/profile" exact />
-        <PrivateRoute component={NewArticle} path="/new-article" exact />
-        <PrivateRoute
-          component={EditArticle}
-          path="/articles/:slug/edit"
-          exact
-        />
-        <Route path="/articles/:slug" component={ArticlePage} exact />
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <>
+            <Route path="/" component={ArticlesList} exact />
+            <LogedInRoute path="/sign-in" component={SignIn} exact />
+            <LogedInRoute path="/sign-up" component={SignUp} exact />
+            <Route path="/articles" component={ArticlesList} exact />
+            <PrivateRoute component={EditProfile} path="/profile" exact />
+            <PrivateRoute component={NewArticle} path="/new-article" exact />
+            <PrivateRoute
+              component={EditArticle}
+              path="/articles/:slug/edit"
+              exact
+            />
+            <Route path="/articles/:slug" component={ArticlePage} exact />
+          </>
+        )}
       </div>
     </Router>
   );

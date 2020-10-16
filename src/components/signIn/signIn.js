@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { Modal } from "antd";
+import { Alert, Result, Button } from "antd";
 import { Link, useHistory } from "react-router-dom";
 import FormInput from "../formComponents/formInput";
 import { authUser } from "../../services/api";
-import { authenticateUser, setLogedIn, setToken } from "../../actions";
+import { authenticateUser, setLogedIn } from "../../actions";
 
 import "antd/dist/antd.css";
 import form from "../formComponents/form.module.scss";
 
 const SignIn = () => {
   const { register, handleSubmit, errors } = useForm();
+  const [errorServerValidation, setErrorServerValidation] = useState();
   const [error, setErrors] = useState();
-  const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -22,16 +22,14 @@ const SignIn = () => {
       const response = await authUser(data);
 
       if (response.errors) {
-        setErrors(response.errors);
-        setVisible(true);
+        setErrorServerValidation(response.errors);
       }
 
       if (response.user) {
-        dispatch(authenticateUser(response.user));
         dispatch(setLogedIn(true));
-        const { token } = response.user;
-        dispatch(setToken(token));
-        localStorage.setItem("token", token);
+        const { user } = response;
+        localStorage.setItem("user", JSON.stringify(user));
+        dispatch(authenticateUser(user));
         history.push("/articles");
       }
     } catch (err) {
@@ -39,32 +37,47 @@ const SignIn = () => {
     }
   };
 
-  if (error) {
+  const errorHandler = () => {
     const errorsNames = Object.keys(error);
     const errorMsgs = errorsNames.map((err) => {
       const msgs = error[err].join(` and `);
-      return <p style={{ color: "red" }}>{`${err}: ${msgs}`}</p>;
+      return `${err} ${msgs}`;
     });
 
     return (
-      <Modal
-        title="Basic Modal"
-        visible={visible}
-        onOk={() => {
-          setVisible(false);
-          history.go(0);
-        }}
-        onCancel={() => {
-          setVisible(false);
-          history.go(0);
-        }}
-      >
-        {errorMsgs}
-      </Modal>
+      <Alert
+        style={{ marginBottom: "10px" }}
+        message={errorMsgs}
+        type="warning"
+        showIcon
+        closable
+      />
+    );
+  };
+
+  if (error) {
+    return (
+      <Result
+        status="warning"
+        title={`There are some problems with your operation. ${error}`}
+        extra={
+          <Button
+            onClick={() => {
+              history.push("/sign-in");
+            }}
+            type="primary"
+            key="console"
+          >
+            Back
+          </Button>
+        }
+      />
     );
   }
+
   return (
     <div className={form.container}>
+      {errorServerValidation && errorHandler()}
       <h1 className={form.title}>Sign In</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormInput

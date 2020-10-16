@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes, { arrayOf } from "prop-types";
 import { useForm } from "react-hook-form";
+import { Alert } from "antd";
 import FormInput from "../formInput";
 import Tag from "../tag";
 
@@ -16,6 +17,7 @@ const FormArticle = (props) => {
     description: defaultDesc,
     body: defaultBody,
     tagList: tegsListFromProps,
+    error,
   } = articleData;
 
   useEffect(() => {
@@ -36,6 +38,23 @@ const FormArticle = (props) => {
       body: defaultBody,
     },
   });
+  const errorHandler = () => {
+    const errorsNames = Object.keys(error);
+    const errorMsgs = errorsNames.map((err) => {
+      const msgs = error[err].join(` and `);
+      return `${err} ${msgs}`;
+    });
+
+    return (
+      <Alert
+        style={{ marginBottom: "10px" }}
+        message={errorMsgs}
+        type="warning"
+        showIcon
+        closable
+      />
+    );
+  };
 
   const deleteTagHandler = () => {
     setTagsCount((prevCount) => {
@@ -75,6 +94,7 @@ const FormArticle = (props) => {
 
   return (
     <div className={cls.article__container}>
+      {error && errorHandler()}
       <h1 className={cls.title}>{formTitle}</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormInput

@@ -15,7 +15,7 @@ const Article = ({ article, isList, onDelete }) => {
 
   const history = useHistory();
   const username = useSelector((state) => state.user.username);
-  const token = useSelector((state) => state.token);
+  const token = useSelector((state) => state.user.token);
   const logedIn = useSelector((state) => state.logedIn);
 
   useEffect(() => {

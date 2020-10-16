@@ -1,6 +1,7 @@
 import React from "react";
 
-import spiner from "../../style/icons/Spinner-1s-200px.svg";
+import spiner from "../../style/icons/Eclipse-0.7s-200px.svg";
+// import spiner from "../../style/icons/Spinner-1s-200px.svg";
 import cls from "./loading.module.scss";
 
 const Loading = () => {
