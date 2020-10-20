@@ -4,6 +4,10 @@ import { useHistory } from "react-router-dom";
 import { Result, Button } from "antd";
 import FormArticle from "../formComponents/formArticle";
 import { createArticle } from "../../services/api";
+import {
+  redirectToArticles,
+  redirectToNewArticle,
+} from "../../services/routes";
 import "antd/dist/antd.css";
 
 const NewArticle = () => {
@@ -22,7 +26,7 @@ const NewArticle = () => {
       }
 
       if (response.article) {
-        history.push("/articles");
+        history.push(redirectToArticles());
       }
     } catch (err) {
       setErrors(err);
@@ -37,7 +41,7 @@ const NewArticle = () => {
         extra={
           <Button
             onClick={() => {
-              history.push("/new-article");
+              history.push(redirectToNewArticle());
             }}
             type="primary"
             key="console"

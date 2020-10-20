@@ -6,7 +6,8 @@ import { useHistory } from "react-router-dom";
 import isEmail from "validator/es/lib/isEmail";
 import isURL from "validator/es/lib/isURL";
 import FormInput from "../formComponents/formInput";
-import { updateUser, isUsernameFree } from "../../services/api";
+import { updateUser, isUsernameFree, setToLStorage } from "../../services/api";
+import { redirectToArticles, redirectToProfile } from "../../services/routes";
 import { updateUserProfile, setLogedIn } from "../../actions";
 
 import "antd/dist/antd.css";
@@ -47,8 +48,8 @@ const EditProfile = () => {
         dispatch(updateUserProfile(response.user));
         dispatch(setLogedIn(true));
         const { user } = response;
-        localStorage.setItem("user", JSON.stringify(user));
-        history.push("/articles");
+        setToLStorage("user", user);
+        history.push(redirectToArticles());
       }
     } catch (err) {
       setErrors(err);
@@ -81,7 +82,7 @@ const EditProfile = () => {
         extra={
           <Button
             onClick={() => {
-              history.push("/profile");
+              history.push(redirectToProfile());
             }}
             type="primary"
             key="console"

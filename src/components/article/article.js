@@ -7,11 +7,18 @@ import Markdown from "markdown-to-jsx";
 import { Popconfirm } from "antd";
 import UserView from "../userView";
 import { favoriteArticle } from "../../services/api";
+import {
+  redirectToSignIn,
+  redirectToArticle,
+  redirectToEditArticle,
+} from "../../services/routes";
+import Error from "../error";
 
 import cls from "./article.module.scss";
 
 const Article = ({ article, isList, onDelete }) => {
   const [stateArticle, setStateArticle] = useState(article);
+  const [error, seterror] = useState(false);
 
   const history = useHistory();
   const username = useSelector((state) => state.user.username);
@@ -41,9 +48,11 @@ const Article = ({ article, isList, onDelete }) => {
       if (logedIn) {
         const response = await favoriteArticle(slug, token, favorited);
         setStateArticle(response.article);
+      } else {
+        history.push(redirectToSignIn());
       }
-    } catch (error) {
-      console.log("favoriteArticleHandler -> error", error);
+    } catch (err) {
+      seterror(true);
     }
   };
 
@@ -54,6 +63,9 @@ const Article = ({ article, isList, onDelete }) => {
       </span>
     );
   });
+  if (error) {
+    return <Error />;
+  }
 
   return (
     <div className={cls.article}>
@@ -61,7 +73,7 @@ const Article = ({ article, isList, onDelete }) => {
         <div className={cls.article__left}>
           <div className={cls.article__top}>
             {isList ? (
-              <Link to={`/articles/${slug}`} className={cls.article__title}>
+              <Link to={redirectToArticle(slug)} className={cls.article__title}>
                 {title}
               </Link>
             ) : (
@@ -102,7 +114,7 @@ const Article = ({ article, isList, onDelete }) => {
               </Popconfirm>
               <button
                 onClick={() => {
-                  history.push(`/articles/${slug}/edit`);
+                  history.push(redirectToEditArticle(slug));
                 }}
                 type="button"
                 className={cls.article__edit}

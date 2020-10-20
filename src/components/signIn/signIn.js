@@ -4,7 +4,12 @@ import { useForm } from "react-hook-form";
 import { Alert, Result, Button } from "antd";
 import { Link, useHistory } from "react-router-dom";
 import FormInput from "../formComponents/formInput";
-import { authUser } from "../../services/api";
+import { authUser, setToLStorage } from "../../services/api";
+import {
+  redirectToSignIn,
+  redirectToSignUp,
+  redirectToArticles,
+} from "../../services/routes";
 import { authenticateUser, setLogedIn } from "../../actions";
 
 import "antd/dist/antd.css";
@@ -28,9 +33,9 @@ const SignIn = () => {
       if (response.user) {
         dispatch(setLogedIn(true));
         const { user } = response;
-        localStorage.setItem("user", JSON.stringify(user));
+        setToLStorage("user", user);
         dispatch(authenticateUser(user));
-        history.push("/articles");
+        history.push(redirectToArticles());
       }
     } catch (err) {
       setErrors(err);
@@ -38,9 +43,9 @@ const SignIn = () => {
   };
 
   const errorHandler = () => {
-    const errorsNames = Object.keys(error);
+    const errorsNames = Object.keys(errorServerValidation);
     const errorMsgs = errorsNames.map((err) => {
-      const msgs = error[err].join(` and `);
+      const msgs = errorServerValidation[err].join(` and `);
       return `${err} ${msgs}`;
     });
 
@@ -63,7 +68,7 @@ const SignIn = () => {
         extra={
           <Button
             onClick={() => {
-              history.push("/sign-in");
+              history.push(redirectToSignIn());
             }}
             type="primary"
             key="console"
@@ -122,7 +127,7 @@ const SignIn = () => {
         </button>
         <p className={form.accExist}>
           Don’t have an account?&nbsp;
-          <Link className={form.accExist__link} to="/sign-up">
+          <Link className={form.accExist__link} to={redirectToSignUp()}>
             Sign Up.
           </Link>
         </p>

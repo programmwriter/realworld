@@ -6,7 +6,12 @@ import { Link, useHistory } from "react-router-dom";
 import isEmail from "validator/es/lib/isEmail";
 import FormInput from "../formComponents/formInput";
 import form from "../formComponents/form.module.scss";
-import { regUser, isUsernameFree } from "../../services/api";
+import { regUser, isUsernameFree, setToLStorage } from "../../services/api";
+import {
+  redirectToSignUp,
+  redirectToSignIn,
+  redirectToArticles,
+} from "../../services/routes";
 import { registerUser, setLogedIn } from "../../actions";
 import "antd/dist/antd.css";
 
@@ -30,8 +35,8 @@ const SignUp = () => {
         dispatch(registerUser(response.user));
         dispatch(setLogedIn(true));
         const { user } = response;
-        localStorage.setItem("user", JSON.stringify(user));
-        history.push("/articles");
+        setToLStorage("user", user);
+        history.push(redirectToArticles());
       }
     } catch (err) {
       setErrors(err);
@@ -39,9 +44,9 @@ const SignUp = () => {
   };
 
   const errorHandler = () => {
-    const errorsNames = Object.keys(error);
+    const errorsNames = Object.keys(errorServerValidation);
     const errorMsgs = errorsNames.map((err) => {
-      const msgs = error[err].join(` and `);
+      const msgs = errorServerValidation[err].join(` and `);
       return `${err} ${msgs}`;
     });
 
@@ -63,7 +68,7 @@ const SignUp = () => {
         extra={
           <Button
             onClick={() => {
-              history.push("/sign-up");
+              history.push(redirectToSignUp());
             }}
             type="primary"
             key="console"
@@ -185,7 +190,7 @@ const SignUp = () => {
         </button>
         <p className={form.accExist}>
           Already have an account?&nbsp;
-          <Link className={form.accExist__link} to="/sign-in">
+          <Link className={form.accExist__link} to={redirectToSignIn()}>
             Sign In
           </Link>
         </p>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { BrowserRouter as Router, Route } from "react-router-dom";
+import { getFromLStorage } from "../../services/api";
 import Header from "../header";
 import ArticlesList from "../articlesList";
 import ArticlePage from "../articlePage";
@@ -23,7 +24,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const localUser = localStorage.getItem("user");
+    const localUser = getFromLStorage("user");
     if (localUser) {
       dispatch(setLogedIn(true));
       dispatch(authenticateUser(JSON.parse(localUser)));
@@ -41,10 +42,9 @@ function App() {
           <Loading />
         ) : (
           <>
-            <Route path="/" component={ArticlesList} exact />
+            <Route path={["/", "/articles"]} component={ArticlesList} exact />
             <LogedInRoute path="/sign-in" component={SignIn} exact />
             <LogedInRoute path="/sign-up" component={SignUp} exact />
-            <Route path="/articles" component={ArticlesList} exact />
             <PrivateRoute component={EditProfile} path="/profile" exact />
             <PrivateRoute component={NewArticle} path="/new-article" exact />
             <PrivateRoute

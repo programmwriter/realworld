@@ -4,6 +4,10 @@ import { useHistory, useParams } from "react-router-dom";
 import { Result, Button } from "antd";
 import FormArticle from "../formComponents/formArticle";
 import { getSingleArticle, updateArticle } from "../../services/api";
+import {
+  redirectToArticle,
+  redirectToEditArticle,
+} from "../../services/routes";
 import Loading from "../loading";
 import "antd/dist/antd.css";
 
@@ -41,7 +45,7 @@ const EditArticle = () => {
 
       if (response.article) {
         const { slug: newSlag } = response.article;
-        history.push(`/articles/${newSlag}`);
+        history.push(redirectToArticle(newSlag));
       }
     } catch (err) {
       setErrors(err);
@@ -56,7 +60,7 @@ const EditArticle = () => {
         extra={
           <Button
             onClick={() => {
-              history.push("/edit");
+              history.push(redirectToEditArticle(slug));
             }}
             type="primary"
             key="console"

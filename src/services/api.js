@@ -1,26 +1,15 @@
-// import { method } from "lodash";
-
 const baseUrl = "https://conduit.productionready.io/api/";
 
 const request = async (url, options = {}) => {
-  let body;
   try {
     const response = await fetch(url, options);
 
-    if (!response.ok) {
-      body = await response.json();
-      return body;
-    }
-
-    body = await response.json();
+    return await response.json();
   } catch (error) {
     const myMessage = "Requests faild";
     throw new Error(`${myMessage}, ${error.message}`);
   }
-
-  return body;
 };
-
 export const isUsernameFree = async (username) => {
   const response = await request(`${baseUrl}profiles/${username}`);
   if (response.profile) {
@@ -229,4 +218,14 @@ export const deleteArticle = async (slug, jwtToken) => {
   await request(`${baseUrl}articles/${slug}`, options);
 
   return "article deleted";
+};
+
+export const getFromLStorage = (valueName) => {
+  return localStorage.getItem(valueName);
+};
+export const removeFromLStorage = (valueName) => {
+  return localStorage.removeItem(valueName);
+};
+export const setToLStorage = (valueName, data) => {
+  localStorage.setItem(valueName, JSON.stringify(data));
 };

@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import { logoutUser } from "../../actions";
 import UserView from "../userView";
+import { removeFromLStorage } from "../../services/api";
+import { redirectToNewArticle, redirectToProfile } from "../../services/routes";
 
 import cls from "./userHeaderView.module.scss";
 
@@ -12,7 +14,7 @@ const UserHeaderView = () => {
   const dispatch = useDispatch();
 
   const logoutHendler = () => {
-    localStorage.removeItem("user");
+    removeFromLStorage("user");
     history.go(0);
     dispatch(logoutUser);
   };
@@ -21,10 +23,10 @@ const UserHeaderView = () => {
 
   return (
     <div className={cls.userHeaderView}>
-      <Link to="/new-article" className={cls.createArticle}>
+      <Link to={redirectToNewArticle()} className={cls.createArticle}>
         Create article
       </Link>
-      <Link to="/profile">
+      <Link to={redirectToProfile()}>
         <UserView author={user} isArticle={false} />
       </Link>
 

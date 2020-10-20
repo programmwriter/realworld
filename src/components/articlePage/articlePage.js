@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { getSingleArticle, deleteArticle } from "../../services/api";
+import { redirectToArticles } from "../../services/routes";
 import Article from "../article";
 import cls from "./articlePage.module.scss";
 import Loading from "../loading";
@@ -43,7 +44,7 @@ const ArticlePage = () => {
   }
   const deleteArticleHandler = async () => {
     await deleteArticle(slug, token);
-    history.push(`/articles`);
+    history.push(redirectToArticles());
   };
 
   return (
