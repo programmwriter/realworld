@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import { getFromLStorage } from "../../services/api";
+import { getFromLStorage, getCurrentUser } from "../../services/api";
 import Header from "../header";
 import ArticlesList from "../articlesList";
 import ArticlePage from "../articlePage";
@@ -13,6 +13,7 @@ import EditArticle from "../editArticle";
 import PrivateRoute from "../routeComponents/privateRoute";
 import LogedInRoute from "../routeComponents/logedInRoute";
 import Loading from "../loading";
+import Error from "../error";
 
 import { authenticateUser, setLogedIn } from "../../actions";
 
@@ -22,26 +23,42 @@ import "antd/dist/antd.css";
 function App() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    const localUser = getFromLStorage("user");
-    if (localUser) {
-      dispatch(setLogedIn(true));
-      dispatch(authenticateUser(JSON.parse(localUser)));
-      dispatch(setLogedIn(true));
-      setIsLoading(false);
-    }
-    setIsLoading(false);
+    const loginUser = async () => {
+      try {
+        const user = getFromLStorage("user");
+
+        if (user) {
+          const response = await getCurrentUser(user.token);
+          if (response.user) {
+            dispatch(authenticateUser(response.user));
+            dispatch(setLogedIn(true));
+            setIsLoading(false);
+          }
+        } else {
+          setIsLoading(false);
+        }
+      } catch (err) {
+        setError(err);
+      }
+    };
+
+    loginUser();
   }, [dispatch]);
+  if (error) {
+    return <Error msg={error} />;
+  }
 
   return (
     <Router>
       <div className={cls.app}>
-        <Header />
         {isLoading ? (
           <Loading />
         ) : (
           <>
+            <Header />
             <Route path={["/", "/articles"]} component={ArticlesList} exact />
             <LogedInRoute path="/sign-in" component={SignIn} exact />
             <LogedInRoute path="/sign-up" component={SignUp} exact />

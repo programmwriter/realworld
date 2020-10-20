@@ -221,7 +221,7 @@ export const deleteArticle = async (slug, jwtToken) => {
 };
 
 export const getFromLStorage = (valueName) => {
-  return localStorage.getItem(valueName);
+  return JSON.parse(localStorage.getItem(valueName));
 };
 export const removeFromLStorage = (valueName) => {
   return localStorage.removeItem(valueName);
