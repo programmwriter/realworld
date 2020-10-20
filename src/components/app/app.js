@@ -48,7 +48,7 @@ function App() {
     loginUser();
   }, [dispatch]);
   if (error) {
-    return <Error msg={error} />;
+    return <Error />;
   }
 
   return (

@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { Alert, Result, Button } from "antd";
+import { Alert } from "antd";
 import { useHistory } from "react-router-dom";
 import isEmail from "validator/es/lib/isEmail";
 import isURL from "validator/es/lib/isURL";
 import FormInput from "../formComponents/formInput";
+import Error from "../error";
 import { updateUser, isUsernameFree, setToLStorage } from "../../services/api";
-import { redirectToArticles, redirectToProfile } from "../../services/routes";
+import { redirectToArticles } from "../../services/routes";
 import { updateUserProfile, setLogedIn } from "../../actions";
 
 import "antd/dist/antd.css";
@@ -75,23 +76,7 @@ const EditProfile = () => {
   };
 
   if (error) {
-    return (
-      <Result
-        status="warning"
-        title={`There are some problems with your operation. ${error}`}
-        extra={
-          <Button
-            onClick={() => {
-              history.push(redirectToProfile());
-            }}
-            type="primary"
-            key="console"
-          >
-            Back
-          </Button>
-        }
-      />
-    );
+    return <Error />;
   }
 
   return (

@@ -3,12 +3,12 @@ import { Result } from "antd";
 
 import cls from "./error.module.scss";
 
-const Error = (msg) => {
+const Error = () => {
   return (
     <div className={cls.error}>
       <Result
         status="warning"
-        title={`There are some problems with your operation. ${msg}`}
+        title="There are some problems with your operation."
       />
     </div>
   );

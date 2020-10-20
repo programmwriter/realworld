@@ -1,17 +1,14 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { Divider, Alert, Result, Button } from "antd";
+import { Divider, Alert } from "antd";
 import { Link, useHistory } from "react-router-dom";
 import isEmail from "validator/es/lib/isEmail";
+import Error from "../error";
 import FormInput from "../formComponents/formInput";
 import form from "../formComponents/form.module.scss";
 import { regUser, isUsernameFree, setToLStorage } from "../../services/api";
-import {
-  redirectToSignUp,
-  redirectToSignIn,
-  redirectToArticles,
-} from "../../services/routes";
+import { redirectToSignIn, redirectToArticles } from "../../services/routes";
 import { registerUser, setLogedIn } from "../../actions";
 import "antd/dist/antd.css";
 
@@ -60,24 +57,9 @@ const SignUp = () => {
       />
     );
   };
+
   if (error) {
-    return (
-      <Result
-        status="warning"
-        title={`There are some problems with your operation. ${error}`}
-        extra={
-          <Button
-            onClick={() => {
-              history.push(redirectToSignUp());
-            }}
-            type="primary"
-            key="console"
-          >
-            Back
-          </Button>
-        }
-      />
-    );
+    return <Error />;
   }
 
   return (

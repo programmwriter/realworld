@@ -1,15 +1,12 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { Alert, Result, Button } from "antd";
+import { Alert } from "antd";
 import { Link, useHistory } from "react-router-dom";
+import Error from "../error";
 import FormInput from "../formComponents/formInput";
 import { authUser, setToLStorage } from "../../services/api";
-import {
-  redirectToSignIn,
-  redirectToSignUp,
-  redirectToArticles,
-} from "../../services/routes";
+import { redirectToSignUp, redirectToArticles } from "../../services/routes";
 import { authenticateUser, setLogedIn } from "../../actions";
 
 import "antd/dist/antd.css";
@@ -61,23 +58,7 @@ const SignIn = () => {
   };
 
   if (error) {
-    return (
-      <Result
-        status="warning"
-        title={`There are some problems with your operation. ${error}`}
-        extra={
-          <Button
-            onClick={() => {
-              history.push(redirectToSignIn());
-            }}
-            type="primary"
-            key="console"
-          >
-            Back
-          </Button>
-        }
-      />
-    );
+    return <Error />;
   }
 
   return (

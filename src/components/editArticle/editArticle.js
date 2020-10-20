@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
-import { Result, Button } from "antd";
+import Error from "../error";
 import FormArticle from "../formComponents/formArticle";
 import { getSingleArticle, updateArticle } from "../../services/api";
-import {
-  redirectToArticle,
-  redirectToEditArticle,
-} from "../../services/routes";
+import { redirectToArticle } from "../../services/routes";
 import Loading from "../loading";
 import "antd/dist/antd.css";
 
@@ -53,23 +50,7 @@ const EditArticle = () => {
   };
 
   if (error) {
-    return (
-      <Result
-        status="warning"
-        title={`There are some problems with your operation. ${error}`}
-        extra={
-          <Button
-            onClick={() => {
-              history.push(redirectToEditArticle(slug));
-            }}
-            type="primary"
-            key="console"
-          >
-            Go Console
-          </Button>
-        }
-      />
-    );
+    return <Error />;
   }
 
   if (isLoading) {
