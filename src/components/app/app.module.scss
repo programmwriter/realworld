@@ -1,7 +1,10 @@
+@import "../../style/sizes.scss";
+
 .app {
   position: relative;
   height:1024px;
-  width:1440px;
+  max-width:1440px;
+  min-width:350px;
   margin: 30px auto;
-  background: #EBEEF3;
+  background: #EBEEF3;  
 }

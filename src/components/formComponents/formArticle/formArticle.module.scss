@@ -1,7 +1,10 @@
+@import "../../../style/sizes.scss";
+
 .article__container {
   margin: 20px auto;
   background-color: #fff;
-  width: 938px;
+  max-width: 938px;
+  min-width: $sm;
   padding: 48px 32px;
   border: 1px solid #d9d9d9;
   box-sizing: border-box;
@@ -66,7 +69,7 @@
   }
 }
 .sendButtonBox {
-  width: 319px;
+  max-width: 319px;
 }
 .button {
   height: 40px;

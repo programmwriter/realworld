@@ -1,7 +1,10 @@
+@import "../../style/sizes.scss";
+
 .container {
   margin: 20px auto;
   background-color: #fff;
-  width: 384px;
+  max-width: 384px;
+  min-width: $sm;
   padding: 48px 32px;
   border: 1px solid #d9d9d9;
   box-sizing: border-box;

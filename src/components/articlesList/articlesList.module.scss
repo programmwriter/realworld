@@ -1,5 +1,6 @@
 .articles_list {
-  width: 941px;
+  max-width: 941px;
+  min-width: 350px;
   height: 100px;
   margin: 20px auto;
 }

@@ -1,3 +1,5 @@
+@import "../../style/sizes.scss";
+
 .header {
   height: 80px;
   width: 100%;
@@ -5,6 +7,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media screen and (max-width: $md) {
+    height: auto;
+    flex-direction: column;
+    padding: 10px 60px;
+  }
 
   &__title {
     margin-left: 22px;
